@@ -8,6 +8,7 @@ import remarkWikiLink from 'remark-wiki-link';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import remarkFrontmatter from 'remark-frontmatter';
+import remarkMdLink from './src/lib/remark-md-link.mjs';
 
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -37,6 +38,7 @@ const remarkPlugins = [
   remarkGfm,
   remarkBreaks,
   [remarkWikiLink, { permalinks: [], pageResolver, hrefTemplate }],
+  remarkMdLink,
 ];
 
 const rehypePlugins = [
