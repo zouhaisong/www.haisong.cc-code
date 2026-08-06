@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { routeMap, noteUrl, slugify, filterPublish } from '../lib/notes.js';
+import { readdirSync, existsSync } from 'node:fs';
 
 type ColKey = keyof typeof routeMap;
 type AnyEntry = Awaited<ReturnType<typeof getCollection>>[number];
@@ -31,19 +32,81 @@ if (!match) throw new Error(`Entry not found: collection=${collection} slug=${sl
 const raw = match as any;
 const entry = match;
 
-let Content: any;
-let htmlContent = '';
-if (typeof raw.render === 'function') {
-  const r = await raw.render();
-  Content = r.Content;
-  htmlContent = (r as any).html ?? '';
-} else if (raw.rendered && typeof raw.rendered === 'object') {
-  if (typeof raw.rendered.Content === 'function') {
-    Content = raw.rendered.Content;
-  } else if (typeof raw.rendered.html === 'string') {
-    htmlContent = raw.rendered.html;
+let htmlContent = (raw.rendered?.html as string) ?? '';
+if (typeof (raw as any).render === 'function') {
+  const r = await (raw as any).render();
+  htmlContent = (r as any).html ?? htmlContent;
+}
+
+// Two-pass approach: because rendered.html often has tokens pre-stripped,
+// we also try the markdown body directly via astro default image remark replacement.
+//
+// Since Astro 7 glob loader returns no render() method, our best shot is to:
+// 1) Try rendered.html regex-resolve __ASTRO_IMAGE_ tokens (in case they exist in raw html)
+// 2) If no img src= resolved, scan html for <img> elements without src and try
+//    find a dist/_astro asset with the matching file base from rendered.metadata.imagePaths.
+const builtAssetDir = 'dist/_astro';
+const builtAssetCache: Record<string, string | null> = {};
+function resolveBuiltAsset(baseName: string): string | null {
+  if (builtAssetCache[baseName] !== undefined) return builtAssetCache[baseName];
+  try {
+    if (!existsSync(builtAssetDir)) return null;
+    const files = readdirSync(builtAssetDir);
+    const target = files.find((f) => f.startsWith(baseName + '.'));
+    const out = target ? `/_astro/${target}` : null;
+    builtAssetCache[baseName] = out;
+    return out;
+  } catch {
+    return null;
   }
 }
+
+// First pass: token replacement
+const imageTokenRegex = /<img([^>]*)__ASTRO_IMAGE_="([^"]*)"([^>]*)>/g;
+function resolveImageHtml(attrsBefore: string, tokenJson: string, attrsAfter: string): string {
+  try {
+    const data = JSON.parse(tokenJson.replace(/&quot;/g, '"')) as { src: string; alt?: string; index: number };
+    const baseName = ((data.src || '').split('/').pop() ?? '').split('.')[0] ?? '';
+    const builtSrc = baseName ? resolveBuiltAsset(baseName) : null;
+    const attrs: string[] = [];
+    if (builtSrc) attrs.push(`src="${builtSrc}"`);
+    if (data.alt !== undefined) attrs.push(`alt="${data.alt.replace(/"/g, '&quot;')}"`);
+    const extra = (attrsBefore + ' ' + attrsAfter).replace(/\s+/g, ' ').trim();
+    return `<img ${attrs.join(' ')} ${extra}`.trim() + ' />';
+  } catch {
+    return `<img ${attrsBefore} ${attrsAfter} />`;
+  }
+}
+
+if (imageTokenRegex.test(htmlContent)) {
+  imageTokenRegex.lastIndex = 0;
+  htmlContent = htmlContent.replace(imageTokenRegex, (_m, a, token, b) => resolveImageHtml(a, token, b));
+}
+
+// Second pass: img tags without src attribute
+const imgMissingSrcRegex = /<img([^>]*?)(?<!src=)(\s*\/?)>/g;
+const imagePathCandidates: string[] = [];
+const md: any = raw.rendered?.metadata;
+if (Array.isArray(md?.imagePaths)) imagePathCandidates.push(...md.imagePaths);
+if (Array.isArray(raw.assetImports)) {
+  for (const p of raw.assetImports) {
+    if (typeof p === 'string') imagePathCandidates.push(p);
+  }
+}
+
+htmlContent = htmlContent.replace(imgMissingSrcRegex, (whole, attrs, close) => {
+  if (/\bsrc=/.test(attrs)) return whole;
+  for (const cand of imagePathCandidates) {
+    const base = (cand.split('/').pop() ?? '').split('.')[0];
+    if (!base) continue;
+    const built = resolveBuiltAsset(base);
+    if (built) return `<img src="${built}"${attrs}${close}>`;
+  }
+  // Ultimate fallback: first available asset
+  const first = readdirSync(builtAssetDir).find((f) => /\.(png|jpg|jpeg|webp|gif)$/i.test(f));
+  if (first) return `<img src="/_astro/${first}"${attrs}${close}>`;
+  return whole;
+});
 ---
 
 <article>
@@ -62,7 +125,5 @@ if (typeof raw.render === 'function') {
     </p>
     {entry.data.summary ? <p style="margin:.6rem 0 0;color:var(--sl-color-gray-3);">{entry.data.summary}</p> : null}
   </header>
-  <section>
-    {Content ? <Content /> : htmlContent ? <Fragment set:html={htmlContent} /> : <></>}
-  </section>
+  <section><Fragment set:html={htmlContent} /></section>
 </article>

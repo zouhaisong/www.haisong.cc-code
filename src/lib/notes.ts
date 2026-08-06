@@ -1,33 +1,11 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-type ColKey =
-  | 'articles'
-  | 'daily'
-  | 'wiki-software-engineering'
-  | 'wiki-ai-coding'
-  | 'wiki-ai-agent'
-  | 'wiki-tools'
-  | 'wiki-tips'
-  | 'wiki'
-  | 'solutions'
-  | 'topics'
-  | 'spikes'
-  | 'notes';
+type ColKey = 'blog' | 'wiki';
 
 const routeMap: Record<ColKey, string> = {
-  articles: '/articles',
-  daily: '/daily',
-  'wiki-software-engineering': '/wiki/software-engineering',
-  'wiki-ai-coding': '/wiki/ai-coding',
-  'wiki-ai-agent': '/wiki/ai-agent',
-  'wiki-tools': '/wiki/tools',
-  'wiki-tips': '/wiki/tips',
+  blog: '/blog',
   wiki: '/wiki',
-  solutions: '/solutions',
-  topics: '/topics',
-  spikes: '/spikes',
-  notes: '/notes',
 };
 
 function slugify(id: string) {
@@ -45,7 +23,7 @@ function filterPublish(e: { data: { publish?: boolean } }): boolean {
 }
 
 export function noteUrl(collection: string, id: string): string {
-  const base = (routeMap as Record<string, string>)[collection] ?? '/notes';
+  const base = (routeMap as Record<string, string>)[collection] ?? '/blog';
   const s = slugify(id);
   return s ? `${base}/${s}/` : `${base}/`;
 }
