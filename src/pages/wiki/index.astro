@@ -1,0 +1,44 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { slugify, filterPublish } from '../../lib/notes.js';
+import MainLayout from '../../layouts/MainLayout.astro';
+
+type AnyEntry = CollectionEntry<'wiki'>;
+
+const entries = (await getCollection('wiki', filterPublish as any)) as AnyEntry[];
+
+function linkFor(entry: AnyEntry) {
+  const s = slugify(entry.id);
+  return `/wiki/${s}/`;
+}
+---
+
+<MainLayout title="知识库">
+  <article>
+    <header style="padding: 1rem 0;border-bottom: 1px solid var(--sl-color-gray-5);margin-bottom: 1.5rem;">
+      <h1 style="margin:0 0 .5rem;">知识库</h1>
+      <p style="margin:0;color:var(--sl-color-gray-3);font-size:.95rem;">
+        领域知识 · 方法沉淀
+      </p>
+    </header>
+
+    <section>
+      {entries.length ? (
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.75rem;">
+          {entries.map((e) => (
+            <li>
+              <a href={linkFor(e)} style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;">
+                <div style="margin-bottom:.25rem;">
+                  <strong>{e.data.title}</strong>
+                </div>
+                {e.data.summary ? <p style="margin:0;color:var(--sl-color-gray-3);font-size:.9rem;">{e.data.summary}</p> : null}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p style="color:var(--sl-color-gray-3);">暂无条目。</p>
+      )}
+    </section>
+  </article>
+</MainLayout>

@@ -1,7 +1,7 @@
 ---
 title: 欢迎来到我的博客与知识库
 date: 2026-08-01
-tags: ["博客", "建站"]
+tags: ["博客", "知识库"]
 summary: 本博客的第一篇文章，介绍站点目标，并给出简单 wikilink 演示与图片附件示例。
 publish: true
 type: article

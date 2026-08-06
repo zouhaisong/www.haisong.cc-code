@@ -20,44 +20,10 @@ function pageResolver(permalink) {
     .split(/\s+/)
     .join('-')
     .replace(/[^a-z0-9-_/\u4e00-\u9fff]/g, '');
-  const dirMap = {
-    '1-articles': 'blog/articles',
-    '0-dailynote': 'blog/daily',
-    '0-workspace/0-dailynote': 'blog/daily',
-    '1-软件研发': 'wiki/software-engineering',
-    '1-ai-coding': 'wiki/ai-coding',
-    '1-ai-agent': 'wiki/ai-agent',
-    '2-tools': 'wiki/tools',
-    '2-tips': 'wiki/tips',
-    '2-wiki': 'wiki',
-    '2-solutions': 'wiki/solutions',
-    '2-topics': 'wiki/topics',
-    '2-spikes': 'wiki/spikes',
-    '1-aichat': 'wiki/notes',
-    articles: 'blog/articles',
-    daily: 'blog/daily',
-    'wiki-software-engineering': 'wiki/software-engineering',
-    'wiki-ai-coding': 'wiki/ai-coding',
-    'wiki-ai-agent': 'wiki/ai-agent',
-    'wiki-tools': 'wiki/tools',
-    'wiki-tips': 'wiki/tips',
-    solutions: 'wiki/solutions',
-    topics: 'wiki/topics',
-    spikes: 'wiki/spikes',
-    notes: 'wiki/notes',
-  };
   const norm = slug.replace(/^\/+|\/+$/g, '');
   if (!norm) return ['/blog'];
-  if (norm.startsWith('blog/')) return [`/${norm}`];
-  if (norm.startsWith('wiki/')) return [`/${norm}`];
+  if (norm.startsWith('blog/') || norm.startsWith('wiki/')) return [`/${norm}`];
   if (norm === 'blog' || norm === 'wiki') return [`/${norm}`];
-  for (const [prefix, mapped] of Object.entries(dirMap)) {
-    if (norm === prefix) return [`/${mapped}`];
-    if (norm.startsWith(prefix + '/')) {
-      const rest = norm.slice(prefix.length + 1).replace(/^\/+|\/+$/g, '');
-      return rest ? [`/${mapped}/${rest}`] : [`/${mapped}`];
-    }
-  }
   return [`/wiki/${norm}`];
 }
 
@@ -87,7 +53,7 @@ export default defineConfig({
   },
   integrations: [
     starlight({
-      title: '海松的博客与知识库',
+      title: '海松知道',
       defaultLocale: 'root',
       locales: {
         root: { label: '简体中文', lang: 'zh-CN' },

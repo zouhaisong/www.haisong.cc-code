@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { routeMap, noteUrl, slugify, filterPublish } from '../lib/notes.js';
+import MainLayout from '../layouts/MainLayout.astro';
 import { readdirSync, existsSync } from 'node:fs';
 
 type ColKey = keyof typeof routeMap;
@@ -38,13 +39,6 @@ if (typeof (raw as any).render === 'function') {
   htmlContent = (r as any).html ?? htmlContent;
 }
 
-// Two-pass approach: because rendered.html often has tokens pre-stripped,
-// we also try the markdown body directly via astro default image remark replacement.
-//
-// Since Astro 7 glob loader returns no render() method, our best shot is to:
-// 1) Try rendered.html regex-resolve __ASTRO_IMAGE_ tokens (in case they exist in raw html)
-// 2) If no img src= resolved, scan html for <img> elements without src and try
-//    find a dist/_astro asset with the matching file base from rendered.metadata.imagePaths.
 const builtAssetDir = 'dist/_astro';
 const builtAssetCache: Record<string, string | null> = {};
 function resolveBuiltAsset(baseName: string): string | null {
@@ -61,7 +55,6 @@ function resolveBuiltAsset(baseName: string): string | null {
   }
 }
 
-// First pass: token replacement
 const imageTokenRegex = /<img([^>]*)__ASTRO_IMAGE_="([^"]*)"([^>]*)>/g;
 function resolveImageHtml(attrsBefore: string, tokenJson: string, attrsAfter: string): string {
   try {
@@ -83,7 +76,6 @@ if (imageTokenRegex.test(htmlContent)) {
   htmlContent = htmlContent.replace(imageTokenRegex, (_m, a, token, b) => resolveImageHtml(a, token, b));
 }
 
-// Second pass: img tags without src attribute
 const imgMissingSrcRegex = /<img([^>]*?)(?<!src=)(\s*\/?)>/g;
 const imagePathCandidates: string[] = [];
 const md: any = raw.rendered?.metadata;
@@ -102,28 +94,29 @@ htmlContent = htmlContent.replace(imgMissingSrcRegex, (whole, attrs, close) => {
     const built = resolveBuiltAsset(base);
     if (built) return `<img src="${built}"${attrs}${close}>`;
   }
-  // Ultimate fallback: first available asset
-  const first = readdirSync(builtAssetDir).find((f) => /\.(png|jpg|jpeg|webp|gif)$/i.test(f));
+  const first = existsSync(builtAssetDir) ? readdirSync(builtAssetDir).find((f) => /\.(png|jpg|jpeg|webp|gif)$/i.test(f)) : null;
   if (first) return `<img src="/_astro/${first}"${attrs}${close}>`;
   return whole;
 });
 ---
 
-<article>
-  <header style="padding: 1rem 0;border-bottom: 1px solid var(--sl-color-gray-5);margin-bottom: 1.5rem;">
-    <h1 style="margin:0 0 .5rem;">{entry.data.title}</h1>
-    <p style="margin:0;color:var(--sl-color-gray-3);font-size:.9rem;">
-      <time>{entry.data.date instanceof Date ? entry.data.date.toISOString().slice(0, 10) : String(entry.data.date ?? '')}</time>
-      {entry.data.tags?.length ? (
-        <>
-          {' '}·{' '}
-          {entry.data.tags.map((t: string) => (
-            <code style="margin-right:.3rem;">#{t}</code>
-          ))}
-        </>
-      ) : null}
-    </p>
-    {entry.data.summary ? <p style="margin:.6rem 0 0;color:var(--sl-color-gray-3);">{entry.data.summary}</p> : null}
-  </header>
-  <section><Fragment set:html={htmlContent} /></section>
-</article>
+<MainLayout title={entry.data.title} description={entry.data.summary}>
+  <article>
+    <header style="padding: 1rem 0;border-bottom: 1px solid var(--sl-color-gray-5);margin-bottom: 1.5rem;">
+      <h1 style="margin:0 0 .5rem;">{entry.data.title}</h1>
+      <p style="margin:0;color:var(--sl-color-gray-3);font-size:.9rem;">
+        <time>{entry.data.date instanceof Date ? entry.data.date.toISOString().slice(0, 10) : String(entry.data.date ?? '')}</time>
+        {entry.data.tags?.length ? (
+          <>
+            {' '}·{' '}
+            {entry.data.tags.map((t: string) => (
+              <code style="margin-right:.3rem;">#{t}</code>
+            ))}
+          </>
+        ) : null}
+      </p>
+      {entry.data.summary ? <p style="margin:.6rem 0 0;color:var(--sl-color-gray-3);">{entry.data.summary}</p> : null}
+    </header>
+    <section><Fragment set:html={htmlContent} /></section>
+  </article>
+</MainLayout>
