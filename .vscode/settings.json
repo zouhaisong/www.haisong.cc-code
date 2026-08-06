@@ -1,0 +1,37 @@
+{
+  "editor.formatOnSave": true,
+  "editor.rulers": [
+    100
+  ],
+  "files.associations": {
+    "*.md": "markdown",
+    "*.mdx": "mdx"
+  },
+  "markdown.validate.enabled": true,
+  "foam.openDailyNote.onStartup": false,
+  "foam.edit.linkReferenceDefinitions": "off",
+  "foam.files.notesExtensions": "md mdx",
+  "foam.files.newNotePath": "currentDir",
+  "foam.files.newTemplatePath": "",
+  "pasteImage.path": "${currentFileDir}/${currentFileNameWithoutExt}",
+  "pasteImage.basePath": "${projectRoot}",
+  "pasteImage.namePrefix": "",
+  "pasteImage.showFilePathConfirmInputBox": false,
+  "pasteImage.insertPattern": "![${imageName}](${currentFileNameWithoutExt}/${imageFileName})",
+  "markdown.extension.toc.levels": "2..4",
+  "markdown.extension.toc.updateOnSave": true,
+  "markdown.extension.print.absoluteImgPath": false,
+  "tailwindCSS.includeLanguages": {
+    "astro": "html",
+    "mdx": "javascriptreact"
+  },
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  },
+  "[mdx]": {
+    "editor.defaultFormatter": "unifiedjs.vscode-mdx"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
+}

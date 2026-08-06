@@ -1,0 +1,28 @@
+{
+  "useNoteReferencesOnLink": false,
+  "defaultNoteExtension": ".md",
+  "newNoteTemplate": "---\ntitle: ${title}\ndate: ${date}\ntags: []\nsummary: ''\npublish: true\ntype: note\n---\n\n# ${title}\n",
+  "attachmentFolder": "./${currentNoteName}",
+  "ignorePatterns": [
+    "**/.astro/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/deploy/**",
+    "**/.git/**",
+    "**/public/**"
+  ],
+  "paths": {
+    "articles": "1-articles",
+    "daily": "0-workspace/0-DailyNote",
+    "software-engineering": "1-软件研发",
+    "ai-coding": "1-ai-coding",
+    "ai-agent": "1-ai-agent",
+    "tools": "2-tools",
+    "tips": "2-tips",
+    "wiki": "2-wiki",
+    "solutions": "2-solutions",
+    "topics": "2-topics",
+    "spikes": "2-spikes",
+    "aichat": "1-aichat"
+  }
+}

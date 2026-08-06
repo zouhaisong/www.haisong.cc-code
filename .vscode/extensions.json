@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "foam.foam-vscode",
+    "astro-build.astro-vscode",
+    "yzhang.markdown-all-in-one",
+    "esbenp.prettier-vscode",
+    "bierner.markdown-preview-github-styles",
+    "bierner.markdown-mermaid",
+    "mushan.vscode-paste-image",
+    "unifiedjs.vscode-mdx",
+    "bradlc.vscode-tailwindcss"
+  ]
+}

@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --sl-content-width: 72rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  img {
+    border-radius: 0.5rem;
+  }
+
+  blockquote {
+    border-inline-start-width: 4px;
+    border-inline-start-color: var(--sl-color-accent-high);
+    padding-inline: 1rem;
+    font-style: italic;
+    color: var(--sl-color-gray-3);
+  }
+
+  code:not(pre code) {
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+    background: var(--sl-color-gray-6);
+  }
+}

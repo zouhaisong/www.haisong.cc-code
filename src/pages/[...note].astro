@@ -1,0 +1,68 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import { routeMap, noteUrl, slugify, filterPublish } from '../lib/notes.js';
+
+type ColKey = keyof typeof routeMap;
+type AnyEntry = Awaited<ReturnType<typeof getCollection>>[number];
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const keys = Object.keys(routeMap) as ColKey[];
+  const out: { params: { note: string }; props: { collection: ColKey; slug: string } }[] = [];
+  for (const k of keys) {
+    const list = await getCollection(k, filterPublish as any);
+    for (const entry of list as AnyEntry[]) {
+      const s = slugify(entry.id);
+      const url = noteUrl(k, entry.id);
+      const param = url.replace(/^\//, '').replace(/\/$/, '') || 'index';
+      out.push({
+        params: { note: param },
+        props: { collection: k, slug: s },
+      });
+    }
+  }
+  return out;
+};
+
+const { collection, slug } = Astro.props as { collection: ColKey; slug: string };
+const list = (await getCollection(collection, filterPublish as any)) as AnyEntry[];
+const match = list.find((e) => slugify(e.id) === slug) ?? list[0];
+if (!match) throw new Error(`Entry not found: collection=${collection} slug=${slug}`);
+const raw = match as any;
+const entry = match;
+
+let Content: any;
+let htmlContent = '';
+if (typeof raw.render === 'function') {
+  const r = await raw.render();
+  Content = r.Content;
+  htmlContent = (r as any).html ?? '';
+} else if (raw.rendered && typeof raw.rendered === 'object') {
+  if (typeof raw.rendered.Content === 'function') {
+    Content = raw.rendered.Content;
+  } else if (typeof raw.rendered.html === 'string') {
+    htmlContent = raw.rendered.html;
+  }
+}
+---
+
+<article>
+  <header style="padding: 1rem 0;border-bottom: 1px solid var(--sl-color-gray-5);margin-bottom: 1.5rem;">
+    <h1 style="margin:0 0 .5rem;">{entry.data.title}</h1>
+    <p style="margin:0;color:var(--sl-color-gray-3);font-size:.9rem;">
+      <time>{entry.data.date instanceof Date ? entry.data.date.toISOString().slice(0, 10) : String(entry.data.date ?? '')}</time>
+      {entry.data.tags?.length ? (
+        <>
+          {' '}·{' '}
+          {entry.data.tags.map((t: string) => (
+            <code style="margin-right:.3rem;">#{t}</code>
+          ))}
+        </>
+      ) : null}
+    </p>
+    {entry.data.summary ? <p style="margin:.6rem 0 0;color:var(--sl-color-gray-3);">{entry.data.summary}</p> : null}
+  </header>
+  <section>
+    {Content ? <Content /> : htmlContent ? <Fragment set:html={htmlContent} /> : <></>}
+  </section>
+</article>
