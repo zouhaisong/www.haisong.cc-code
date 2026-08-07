@@ -1,112 +1,159 @@
 ---
-import '../styles/custom.css';
-import '../../node_modules/@astrojs/starlight/style/layers.css';
-import '../../node_modules/@astrojs/starlight/style/props.css';
-import '../../node_modules/@astrojs/starlight/style/reset.css';
-import '../../node_modules/@astrojs/starlight/style/asides.css';
-import '../../node_modules/@astrojs/starlight/style/util.css';
-import '@astrojs/starlight/style/markdown.css';
-import printHref from '../../node_modules/@astrojs/starlight/style/print.css?url&no-inline';
-import { siteConfig } from '../config/site';
-import Logo from '../components/Logo.astro';
+import siteConfig from '~/config/site';
+import Logo from '~/components/Logo.astro';
 
 interface Props {
   title?: string;
   description?: string;
-  lang?: string;
 }
 
-const { title, description = siteConfig.description, lang = siteConfig.lang } = Astro.props;
+const {
+  title: pageTitle,
+  description: pageDescription,
+} = Astro.props;
 
-const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;
-const { nav: navItems, seo, favicon } = siteConfig;
-const currentPath = Astro.url.pathname;
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).toString();
+const fullTitle = pageTitle
+  ? `${pageTitle} | ${siteConfig.title}`
+  : siteConfig.title;
+const description = pageDescription ?? siteConfig.description;
+const currentYear = new Date().getFullYear();
 ---
 
 <!DOCTYPE html>
-<html lang={lang} data-theme="dark">
+<html lang={siteConfig.locale.lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="author" content={seo.author} />
-    <meta name="keywords" content={seo.keywords.join(', ')} />
-    <meta name="robots" content={seo.robots} />
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" type="image/svg+xml" href={favicon.image} />
-    <title>{pageTitle}</title>
-    <meta property="og:title" content={pageTitle} />
+    <meta name="keywords" content={siteConfig.seo.keywords?.join(', ')} />
+
+    <link rel="icon" type="image/svg+xml" href={siteConfig.favicon} />
+
+    <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:site_name" content={siteConfig.title} />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content={pageTitle} />
+    <meta property="og:site_name" content={siteConfig.seo.siteName ?? siteConfig.title} />
+    {siteConfig.seo.defaultOGImage && (
+      <meta property="og:image" content={siteConfig.seo.defaultOGImage} />
+    )}
+
+    <meta name="twitter:card" content={siteConfig.seo.twitter?.card ?? 'summary_large_image'} />
+    {siteConfig.seo.twitter?.creator && (
+      <meta name="twitter:creator" content={siteConfig.seo.twitter.creator} />
+    )}
+    <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
-    <link rel="stylesheet" href={printHref} media="print" />
-    <style>
-      html { scroll-padding-top: calc(1.5rem + var(--sl-nav-height)); }
-      main { padding: var(--sl-main-pad); }
-      :root {
-        --sl-nav-height: 3.5rem;
-        --sl-main-pad: 2rem 1.25rem 4rem;
-        --sl-content-width: 67.5rem;
-        --sl-hint-color: var(--sl-color-gray-3);
-      }
-      .site-header {
-        position: sticky; top: 0; z-index: 50;
-        background: var(--sl-color-bg-nav);
-        border-bottom: 1px solid var(--sl-color-gray-5);
-        backdrop-filter: saturate(180%) blur(10px);
-      }
-      .site-header-inner {
-        max-width: var(--sl-content-width);
-        margin: 0 auto;
-        padding: 0 1.25rem;
-        height: var(--sl-nav-height);
-        display: flex; align-items: center; gap: 1.5rem;
-      }
-      .site-title {
-        font-weight: 700; font-size: 1.05rem;
-        color: var(--sl-color-text);
-        text-decoration: none;
-      }
-      .site-nav { display: flex; gap: .25rem; align-items: center; }
-      .site-nav a {
-        padding: .4rem .75rem;
-        border-radius: 6px;
-        font-size: .9rem;
-        color: var(--sl-color-gray-2);
-        text-decoration: none;
-        transition: background .15s, color .15s;
-      }
-      .site-nav a:hover { background: var(--sl-color-gray-6); color: var(--sl-color-text); }
-      .site-nav a.active {
-        background: var(--sl-color-bg-accent);
-        color: var(--sl-color-white);
-      }
-      .site-main {
-        max-width: var(--sl-content-width);
-        margin: 0 auto;
-      }
-    </style>
+    {siteConfig.seo.defaultTwitterImage && (
+      <meta name="twitter:image" content={siteConfig.seo.defaultTwitterImage} />
+    )}
   </head>
-  <body>
+  <body class="layout">
     <header class="site-header">
       <div class="site-header-inner">
-        <Logo />
-        <nav class="site-nav">
-          {navItems.map((item) => {
-            const isActive = currentPath === item.href
-              || (item.href !== '/' && currentPath.startsWith(item.href));
-            return <a href={item.href} class={isActive ? 'active' : ''}>{item.label}</a>;
-          })}
+        <a href="/" class="site-brand" aria-label={siteConfig.title}>
+          <Logo />
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <ul>
+            {siteConfig.navigation.header.map((item) => (
+              <li>
+                <a href={item.link}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
         </nav>
       </div>
     </header>
+
     <main class="site-main">
       <slot />
     </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>© {currentYear} {siteConfig.title}. All rights reserved.</p>
+      </div>
+    </footer>
   </body>
 </html>
+
+<style>
+  .layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .site-header {
+    border-bottom: 1px solid var(--sl-color-gray-6, #e5e7eb);
+    background: var(--sl-color-bg, #ffffff);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .site-header-inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .site-brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .site-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav a {
+    text-decoration: none;
+    color: var(--sl-color-text, #1f2937);
+    font-weight: 500;
+  }
+
+  .site-nav a:hover {
+    color: var(--sl-color-accent, #2563eb);
+  }
+
+  .site-main {
+    flex: 1;
+    max-width: 72rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--sl-color-gray-6, #e5e7eb);
+    background: var(--sl-color-bg, #ffffff);
+  }
+
+  .site-footer-inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+    color: var(--sl-color-text-accent, #6b7280);
+    font-size: 0.875rem;
+  }
+
+  .site-footer-inner p {
+    margin: 0;
+  }
+</style>

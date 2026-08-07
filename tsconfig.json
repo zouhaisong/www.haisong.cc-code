@@ -3,19 +3,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"]
-    },
-    "allowJs": true,
-    "resolveJsonModule": true
+      "~/*": ["src/*"],
+      "@/*": ["src/*"]
+    }
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.astro",
-    "src/**/*.md",
-    "src/**/*.mdx",
-    "astro.config.mjs",
-    "tailwind.config.mjs"
+    ".astro/types.d.ts",
+    "**/*",
+    "src/config/site.config.mjs"
   ],
-  "exclude": ["dist", "node_modules", ".astro"]
+  "exclude": ["dist"]
 }

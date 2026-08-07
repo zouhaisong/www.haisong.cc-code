@@ -1,48 +1,49 @@
-import { siteConfig as raw } from './site.config.mjs';
+import siteConfigData from './site.config.mjs';
 
-export interface FaviconConfig {
-  path: string;
-  image: string;
-}
-
-export interface SeoConfig {
-  author: string;
-  keywords: string[];
-  robots: string;
-}
-
-export interface NavItem {
+export interface SiteLocale {
+  lang: string;
   label: string;
-  href: string;
 }
 
-export interface SocialItem {
+export interface SiteLogo {
+  src: string;
+  alternate?: string;
+  text?: string;
+}
+
+export interface SiteSeoTwitter {
+  creator?: string;
+  card?: string;
+}
+
+export interface SiteSeo {
+  defaultOGImage?: string;
+  defaultTwitterImage?: string;
+  siteName?: string;
+  twitter?: SiteSeoTwitter;
+  keywords?: string[];
+}
+
+export interface SiteNavItem {
   label: string;
-  href: string;
-  icon?: string;
+  link: string;
 }
 
-export interface LocaleConfig {
-  root: { label: string; lang: string };
+export interface SiteNavigation {
+  header: SiteNavItem[];
 }
 
 export interface SiteConfig {
   title: string;
   description: string;
-  tagline: string;
-  logo: string;
-  logoAlternate: string;
-  logoText: string;
-  logoWidth: string;
-  logoHeight: string;
-  favicon: FaviconConfig;
-  seo: SeoConfig;
-  nav: NavItem[];
-  social: SocialItem[];
-  lang: string;
-  locale: LocaleConfig;
+  locale: SiteLocale;
+  url: string;
+  logo: SiteLogo;
+  favicon: string;
+  seo: SiteSeo;
+  navigation: SiteNavigation;
 }
 
-export const siteConfig: SiteConfig = raw as SiteConfig;
+export const siteConfig: SiteConfig = siteConfigData as SiteConfig;
 
 export default siteConfig;

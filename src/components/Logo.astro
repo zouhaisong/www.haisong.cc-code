@@ -1,64 +1,102 @@
 ---
-import { siteConfig } from '../config/site';
+import siteConfig from '~/config/site';
 
 interface Props {
   src?: string;
-  dark?: boolean;
+  alt?: string;
+  width?: number;
+  height?: number;
 }
 
-const { logo, logoAlternate, logoText, logoWidth, logoHeight, title } = siteConfig;
-const { src, dark = false } = Astro.props;
+const {
+  src: propsSrc,
+  alt: propsAlt,
+  width = 32,
+  height = 32,
+} = Astro.props;
 
-const resolvedSrc = src
-  ? src
-  : dark && logoAlternate
-    ? logoAlternate
-    : logo;
-
-const hasLogo = Boolean(resolvedSrc);
-
-function toSentenceCase(input: string): string {
-  if (!input) return '';
-  return input.charAt(0).toUpperCase() + input.slice(1);
-}
-
-const altText = toSentenceCase(`Brand logo of ${title}`);
+const { logo, title } = siteConfig;
+const lightSrc = propsSrc ?? logo.src;
+const darkSrc = propsSrc ?? logo.alternate ?? logo.src;
+const altText = propsAlt ?? logo.text ?? title;
+const hasImage = Boolean(lightSrc);
+const hasDarkVariant = darkSrc !== lightSrc;
+const fallbackText = logo.text ?? title;
 ---
 
-<a class="site-brand" href="/" aria-label={title}>
-  {hasLogo && (
-    <img
-      src={resolvedSrc}
-      alt={altText}
-      class="logo-image"
-      style={{ width: logoWidth, height: logoHeight }}
-      loading="eager"
-      decoding="async"
-    />
+<span class="logo">
+  {hasImage ? (
+    <>
+      <img
+        src={lightSrc}
+        alt={altText}
+        width={width}
+        height={height}
+        class="logo-img logo-img-light"
+        loading="eager"
+        decoding="sync"
+      />
+      {hasDarkVariant && (
+        <img
+          src={darkSrc}
+          alt={altText}
+          width={width}
+          height={height}
+          class="logo-img logo-img-dark"
+          loading="eager"
+          decoding="sync"
+        />
+      )}
+    </>
+  ) : null}
+  {fallbackText && (
+    <span class="logo-text">{fallbackText}</span>
   )}
-  {logoText && (
-    <span class="logo-text">{logoText}</span>
-  )}
-  {!hasLogo && !logoText && (
-    <span class="logo-text">{title}</span>
-  )}
-</a>
+</span>
 
 <style>
-  .site-brand {
+  .logo {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    text-decoration: none;
-    color: inherit;
+    line-height: 1;
     font-weight: 700;
-    font-size: 1.05rem;
+    font-size: 1.125rem;
   }
-  .logo-image {
+
+  .logo-img {
     display: block;
     object-fit: contain;
   }
+
+  .logo-img-dark {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .logo-img-light {
+      display: none;
+    }
+    .logo-img-dark {
+      display: block;
+    }
+  }
+
+  :global([data-theme='light']) .logo-img-dark {
+    display: none;
+  }
+  :global([data-theme='light']) .logo-img-light {
+    display: block;
+  }
+
+  :global([data-theme='dark']) .logo-img-light {
+    display: none;
+  }
+  :global([data-theme='dark']) .logo-img-dark {
+    display: block;
+  }
+
   .logo-text {
-    color: var(--sl-color-text);
+    color: var(--sl-color-text, #111827);
   }
 </style>

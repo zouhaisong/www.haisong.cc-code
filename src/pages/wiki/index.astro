@@ -1,39 +1,107 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
-import { getPublishedCollection, entryUrl } from '../../lib/notes.js';
+import MainLayout from '~/layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
 
-const entries = await getPublishedCollection('wiki');
+const entries = (await getCollection('wiki', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title, 'zh-CN'));
 ---
 
-<MainLayout title="知识库">
-  <article>
-    <header style="padding: 1rem 0;border-bottom: 1px solid var(--sl-color-gray-5);margin-bottom: 1.5rem;">
-      <h1 style="margin:0 0 .5rem;">知识库</h1>
-      <p style="margin:0;color:var(--sl-color-gray-3);font-size:.95rem;">
-        领域知识 · 方法沉淀
-      </p>
+<MainLayout title="维基" description="体系化沉淀编程智能体相关方法论与知识点">
+  <section class="wiki-index">
+    <header class="section-header">
+      <h1>维基</h1>
+      <p class="section-lead">共 {entries.length} 条条目</p>
     </header>
 
-    <section>
-      {entries.length ? (
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.75rem;">
-          {entries.map((e) => (
-            <li>
-              <a
-                href={entryUrl('wiki', e)}
-                style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;"
-              >
-                <div style="margin-bottom:.25rem;">
-                  <strong>{e.data.title}</strong>
-                </div>
-                {e.data.summary ? <p style="margin:0;color:var(--sl-color-gray-3);font-size:.9rem;">{e.data.summary}</p> : null}
-              </a>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p style="color:var(--sl-color-gray-3);">暂无条目。</p>
-      )}
-    </section>
-  </article>
+    {entries.length === 0 ? (
+      <p class="empty-state">暂无条目。</p>
+    ) : (
+      <ul class="entry-list">
+        {entries.map((entry) => (
+          <li class="entry-item">
+            <a href={`/wiki/${entry.id.replace(/\.md$/, '')}/`} class="entry-link">
+              <div class="entry-main">
+                <h2>{entry.data.title}</h2>
+                {entry.data.description && <p>{entry.data.description}</p>}
+              </div>
+              {entry.data.tags?.length > 0 && (
+                <ul class="tag-list">
+                  {entry.data.tags.map((tag) => (
+                    <li class="tag">#{tag}</li>
+                  ))}
+                </ul>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
 </MainLayout>
+
+<style>
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+  .section-header h1 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+  }
+  .section-lead {
+    color: var(--sl-color-text-accent, #6b7280);
+    margin: 0;
+  }
+  .empty-state {
+    color: var(--sl-color-text-accent, #6b7280);
+    padding: 3rem 0;
+    text-align: center;
+    border: 1px dashed var(--sl-color-gray-5, #d1d5db);
+    border-radius: 0.5rem;
+  }
+  .entry-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .entry-link {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--sl-color-gray-6, #e5e7eb);
+    border-radius: 0.75rem;
+    background: var(--sl-color-bg, #ffffff);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease;
+  }
+  .entry-link:hover {
+    border-color: var(--sl-color-accent, #2563eb);
+  }
+  .entry-main h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.125rem;
+    color: var(--sl-color-text, #111827);
+  }
+  .entry-main p {
+    margin: 0;
+    color: var(--sl-color-text-accent, #6b7280);
+    line-height: 1.6;
+  }
+  .tag-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+  }
+  .tag {
+    color: var(--sl-color-accent, #2563eb);
+    font-size: 0.8125rem;
+  }
+</style>

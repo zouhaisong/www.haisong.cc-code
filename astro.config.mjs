@@ -1,80 +1,88 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightBlog from 'starlight-blog';
 import sitemap from '@astrojs/sitemap';
-import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 
-import remarkWikiLink from 'remark-wiki-link';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
-import remarkFrontmatter from 'remark-frontmatter';
-
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypePrettyCode from 'rehype-pretty-code';
-
-import { siteConfig } from './src/config/site.config.mjs';
-
-import starlightBlog from 'starlight-blog'
-
-function pageResolver(permalink) {
-  const slug = String(permalink || '')
-    .replace(/\.(md|mdx)$/i, '')
-    .replace(/\\/g, '/')
-    .replace(/^\/+|\/+$/g, '');
-  if (!slug) return ['/blog'];
-  if (slug.startsWith('blog/') || slug.startsWith('wiki/')) return [`/${slug}`];
-  if (slug === 'blog' || slug === 'wiki') return [`/${slug}`];
-  return [`/wiki/${slug}`];
-}
-
-function hrefTemplate(permalink) {
-  const s = String(permalink || '').replace(/^\/+|\/+$/g, '');
-  return `/${s}/`;
-}
-
-const remarkPlugins = [
-  remarkFrontmatter,
-  remarkGfm,
-  remarkBreaks,
-  [remarkWikiLink, { permalinks: [], pageResolver, hrefTemplate }],
-];
-
-const rehypePlugins = [
-  rehypeSlug,
-  [rehypeAutolinkHeadings, { behavior: 'append' }],
-  [rehypePrettyCode, { theme: 'github-dark' }],
-];
-
-const starlightTitle = siteConfig.logoText || siteConfig.title;
+import siteConfig from './src/config/site.config.mjs';
 
 export default defineConfig({
-  site: 'https://www.haisong.cc',
+  site: siteConfig.url,
   trailingSlash: 'ignore',
-  legacy: {
-    collectionsBackwardsCompat: true,
+  build: {
+    format: 'directory',
   },
   vite: {
     plugins: [tailwindcss()],
   },
   integrations: [
     starlight({
-      title: starlightTitle,
+      title: siteConfig.title,
       description: siteConfig.description,
-      defaultLocale: 'root',
-      locales: siteConfig.locale,
-      customCss: ['./src/styles/custom.css'],
-      plugins: [starlightBlog()],
+      defaultLocale: siteConfig.locale.lang,
+      locales: {
+        root: {
+          label: siteConfig.locale.label,
+          lang: siteConfig.locale.lang,
+        },
+      },
+      favicon: siteConfig.favicon,
+      social: [],
+      expressiveCode: {
+        themes: ['github-light', 'github-dark'],
+      },
+      sidebar: [
+        {
+          label: '博客',
+          link: '/blog/',
+        },
+        {
+          label: '维基',
+          items: [
+            { link: '/wiki/', label: '维基首页' },
+            { autogenerate: { directory: 'wiki' } },
+          ],
+        },
+      ],
+      components: {},
+      head: [
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:site_name',
+            content: siteConfig.seo.siteName ?? siteConfig.title,
+          },
+        },
+      ],
+      plugins: [
+        starlightBlog({
+          title: '博客',
+          authors: {},
+          postsPerPage: 10,
+          recentPostCount: 5,
+        }),
+      ],
     }),
-    sitemap(),
-    mdx(),
+    sitemap({
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+    }),
   ],
   markdown: {
-    remarkPlugins,
-    rehypePlugins,
-    shikiConfig: { theme: 'github-dark', wrap: true },
-  },
-  image: {
-    service: { entrypoint: 'astro/assets/services/sharp' },
+    remarkPlugins: [
+      'remark-frontmatter',
+      'remark-gfm',
+      'remark-breaks',
+      ['remark-wiki-link', { pageResolver: (name) => [name] }],
+    ],
+    rehypePlugins: [
+      'rehype-slug',
+      ['rehype-autolink-headings', { behavior: 'wrap' }],
+      ['rehype-pretty-code', { theme: { light: 'github-light', dark: 'github-dark' } }],
+    ],
+    shikiConfig: {
+      wrap: true,
+    },
   },
 });

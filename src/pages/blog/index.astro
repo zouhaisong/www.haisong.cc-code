@@ -1,47 +1,115 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
-import { getPublishedCollection, entryUrl, sortByDateDesc } from '../../lib/notes.js';
+import MainLayout from '~/layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
 
-const entries = (await getPublishedCollection('blog')).sort(sortByDateDesc);
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<MainLayout title="博客">
-  <article>
-    <header style="padding: 1rem 0;border-bottom: 1px solid var(--sl-color-gray-5);margin-bottom: 1.5rem;">
-      <h1 style="margin:0 0 .5rem;">博客</h1>
-      <p style="margin:0;color:var(--sl-color-gray-3);font-size:.95rem;">
-        文章 · 每日笔记
-      </p>
+<MainLayout title="博客" description="沉淀与分享编程智能体实践心得与经验">
+  <section class="blog-index">
+    <header class="section-header">
+      <h1>博客</h1>
+      <p class="section-lead">共 {posts.length} 篇文章</p>
     </header>
 
-    <section>
-      {entries.length ? (
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.75rem;">
-          {entries.map((e) => (
-            <li>
-              <a
-                href={entryUrl('blog', e)}
-                style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;"
-              >
-                <div style="display:flex;align-items:baseline;gap:.75rem;margin-bottom:.25rem;">
-                  <strong>{e.data.title}</strong>
-                  {e.data.date instanceof Date ? (
-                    <time
-                      datetime={e.data.date.toISOString()}
-                      style="font-size:.8rem;color:var(--sl-color-gray-3);"
-                    >
-                      {e.data.date.toISOString().slice(0, 10)}
-                    </time>
-                  ) : null}
-                </div>
-                {e.data.summary ? <p style="margin:0;color:var(--sl-color-gray-3);font-size:.9rem;">{e.data.summary}</p> : null}
-              </a>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p style="color:var(--sl-color-gray-3);">暂无文章。</p>
-      )}
-    </section>
-  </article>
+    {posts.length === 0 ? (
+      <p class="empty-state">暂无文章。</p>
+    ) : (
+      <ul class="post-list">
+        {posts.map((post) => (
+          <li class="post-item">
+            <article>
+              <h2>
+                <a href={`/blog/${post.id.replace(/\.md$/, '')}/`}>{post.data.title}</a>
+              </h2>
+              <div class="post-meta">
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('zh-CN')}
+                </time>
+                {post.data.tags?.length > 0 && (
+                  <ul class="tag-list">
+                    {post.data.tags.map((tag) => (
+                      <li class="tag">#{tag}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              {post.data.description && <p class="post-desc">{post.data.description}</p>}
+            </article>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
 </MainLayout>
+
+<style>
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+  .section-header h1 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+  }
+  .section-lead {
+    color: var(--sl-color-text-accent, #6b7280);
+    margin: 0;
+  }
+  .empty-state {
+    color: var(--sl-color-text-accent, #6b7280);
+    padding: 3rem 0;
+    text-align: center;
+    border: 1px dashed var(--sl-color-gray-5, #d1d5db);
+    border-radius: 0.5rem;
+  }
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .post-item article {
+    padding: 1.5rem;
+    border: 1px solid var(--sl-color-gray-6, #e5e7eb);
+    border-radius: 0.75rem;
+    background: var(--sl-color-bg, #ffffff);
+  }
+  .post-item h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+  }
+  .post-item h2 a {
+    text-decoration: none;
+    color: var(--sl-color-text, #111827);
+  }
+  .post-item h2 a:hover {
+    color: var(--sl-color-accent, #2563eb);
+  }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: var(--sl-color-text-accent, #6b7280);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+  .tag-list {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+  }
+  .tag {
+    color: var(--sl-color-accent, #2563eb);
+    font-size: 0.8125rem;
+  }
+  .post-desc {
+    margin: 0;
+    color: var(--sl-color-text, #374151);
+    line-height: 1.6;
+  }
+</style>
