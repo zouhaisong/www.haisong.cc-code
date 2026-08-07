@@ -1,19 +1,20 @@
 import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+
 import { z } from 'astro/zod';
 
 const baseSchema = z.object({
   title: z.string(),
+  slug: z.string().optional(),
   type: z
-    .enum(['article', 'daily', 'solution', 'topic', 'spike', 'note', 'wiki'])
+    .enum(['article', 'solution', 'topic', 'wiki'])
     .optional(),
   date: z
-    .union([z.string().datetime(), z.string().date(), z.date()])
-    .optional()
-    .transform((d) => (d ? new Date(d) : undefined)),
+    .union([z.coerce.date(), z.date()])
+    .optional(),
   updated: z
-    .union([z.string().datetime(), z.string().date(), z.date()])
-    .optional()
-    .transform((d) => (d ? new Date(d) : undefined)),
+    .union([z.coerce.date(), z.date()])
+    .optional(),
   tags: z.array(z.string()).default([]),
   summary: z.string().default(''),
   publish: z.boolean().default(true),
@@ -25,11 +26,11 @@ const baseSchema = z.object({
 
 export const collections = {
   blog: defineCollection({
-    type: 'content',
+    loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
     schema: baseSchema,
   }),
   wiki: defineCollection({
-    type: 'content',
+    loader: glob({ pattern: '**/*.md', base: './src/content/wiki' }),
     schema: baseSchema,
   }),
 };

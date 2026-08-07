@@ -6,10 +6,12 @@ import { getPublishedCollection, entryUrl, type ColKey } from '../../lib/notes.j
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const entries = await getPublishedCollection('wiki');
-  return entries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+  return entries
+    .filter((entry) => entry.slug && entry.slug !== 'index')
+    .map((entry) => ({
+      params: { slug: entry.slug },
+      props: { entry },
+    }));
 };
 
 const { entry } = Astro.props as { entry: CollectionEntry<'wiki'> };

@@ -15,6 +15,8 @@ import rehypePrettyCode from 'rehype-pretty-code';
 
 import { siteConfig } from './src/config/site.config.mjs';
 
+import starlightBlog from 'starlight-blog'
+
 function pageResolver(permalink) {
   const slug = String(permalink || '')
     .replace(/\.(md|mdx)$/i, '')
@@ -49,6 +51,9 @@ const starlightTitle = siteConfig.logoText || siteConfig.title;
 export default defineConfig({
   site: 'https://www.haisong.cc',
   trailingSlash: 'ignore',
+  legacy: {
+    collectionsBackwardsCompat: true,
+  },
   vite: {
     plugins: [tailwindcss()],
   },
@@ -59,6 +64,7 @@ export default defineConfig({
       defaultLocale: 'root',
       locales: siteConfig.locale,
       customCss: ['./src/styles/custom.css'],
+      plugins: [starlightBlog()],
     }),
     sitemap(),
     mdx(),
