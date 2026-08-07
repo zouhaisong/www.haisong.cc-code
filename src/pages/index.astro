@@ -1,25 +1,12 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
-import { slugify, filterPublish } from '../lib/notes.js';
 import MainLayout from '../layouts/MainLayout.astro';
+import { getPublishedCollection, entryUrl, sortByDateDesc } from '../lib/notes.js';
 import { siteConfig } from '../config/site';
 
-type AnyEntry = CollectionEntry<'blog' | 'wiki'>;
-
-const blogEntries = (await getCollection('blog', filterPublish as any)) as AnyEntry[];
-blogEntries.sort((a: AnyEntry, b: AnyEntry) => {
-  const da = a.data.date ? new Date(a.data.date).getTime() : 0;
-  const db = b.data.date ? new Date(b.data.date).getTime() : 0;
-  return db - da;
-});
+const blogEntries = (await getPublishedCollection('blog')).sort(sortByDateDesc);
 const blogTop = blogEntries.slice(0, 5);
 
-const wikiTop = ((await getCollection('wiki', filterPublish as any)) as AnyEntry[]).slice(0, 5);
-
-function linkFor(collection: string, entry: AnyEntry) {
-  const s = slugify(entry.id);
-  return `/${collection}/${s}/`;
-}
+const wikiTop = (await getPublishedCollection('wiki')).slice(0, 5);
 ---
 
 <MainLayout>
@@ -37,12 +24,18 @@ function linkFor(collection: string, entry: AnyEntry) {
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.75rem;">
           {blogTop.map((e) => (
             <li>
-              <a href={linkFor('blog', e)} style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;">
+              <a
+                href={entryUrl('blog', e)}
+                style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;"
+              >
                 <div style="display:flex;align-items:baseline;gap:.75rem;margin-bottom:.25rem;">
                   <strong>{e.data.title}</strong>
-                  {e.data.date ? (
-                    <time style="font-size:.8rem;color:var(--sl-color-gray-3);">
-                      {new Date(e.data.date).toISOString().slice(0, 10)}
+                  {e.data.date instanceof Date ? (
+                    <time
+                      datetime={e.data.date.toISOString()}
+                      style="font-size:.8rem;color:var(--sl-color-gray-3);"
+                    >
+                      {e.data.date.toISOString().slice(0, 10)}
                     </time>
                   ) : null}
                 </div>
@@ -65,7 +58,10 @@ function linkFor(collection: string, entry: AnyEntry) {
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.75rem;">
           {wikiTop.map((e) => (
             <li>
-              <a href={linkFor('wiki', e)} style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;">
+              <a
+                href={entryUrl('wiki', e)}
+                style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;"
+              >
                 <div style="margin-bottom:.25rem;">
                   <strong>{e.data.title}</strong>
                 </div>

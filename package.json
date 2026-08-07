@@ -27,6 +27,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-wiki-link": "^2.0.1",
+    "starlight-blog": "^0.28.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   }

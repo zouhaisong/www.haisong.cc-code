@@ -8,7 +8,6 @@ import remarkWikiLink from 'remark-wiki-link';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import remarkFrontmatter from 'remark-frontmatter';
-import remarkMdLink from './src/lib/remark-md-link.mjs';
 
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -19,15 +18,12 @@ import { siteConfig } from './src/config/site.config.mjs';
 function pageResolver(permalink) {
   const slug = String(permalink || '')
     .replace(/\.(md|mdx)$/i, '')
-    .toLowerCase()
-    .split(/\s+/)
-    .join('-')
-    .replace(/[^a-z0-9-_/\u4e00-\u9fff]/g, '');
-  const norm = slug.replace(/^\/+|\/+$/g, '');
-  if (!norm) return ['/blog'];
-  if (norm.startsWith('blog/') || norm.startsWith('wiki/')) return [`/${norm}`];
-  if (norm === 'blog' || norm === 'wiki') return [`/${norm}`];
-  return [`/wiki/${norm}`];
+    .replace(/\\/g, '/')
+    .replace(/^\/+|\/+$/g, '');
+  if (!slug) return ['/blog'];
+  if (slug.startsWith('blog/') || slug.startsWith('wiki/')) return [`/${slug}`];
+  if (slug === 'blog' || slug === 'wiki') return [`/${slug}`];
+  return [`/wiki/${slug}`];
 }
 
 function hrefTemplate(permalink) {
@@ -40,7 +36,6 @@ const remarkPlugins = [
   remarkGfm,
   remarkBreaks,
   [remarkWikiLink, { permalinks: [], pageResolver, hrefTemplate }],
-  remarkMdLink,
 ];
 
 const rehypePlugins = [

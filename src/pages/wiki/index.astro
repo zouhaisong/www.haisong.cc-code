@@ -1,16 +1,8 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
-import { slugify, filterPublish } from '../../lib/notes.js';
 import MainLayout from '../../layouts/MainLayout.astro';
+import { getPublishedCollection, entryUrl } from '../../lib/notes.js';
 
-type AnyEntry = CollectionEntry<'wiki'>;
-
-const entries = (await getCollection('wiki', filterPublish as any)) as AnyEntry[];
-
-function linkFor(entry: AnyEntry) {
-  const s = slugify(entry.id);
-  return `/wiki/${s}/`;
-}
+const entries = await getPublishedCollection('wiki');
 ---
 
 <MainLayout title="知识库">
@@ -27,7 +19,10 @@ function linkFor(entry: AnyEntry) {
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.75rem;">
           {entries.map((e) => (
             <li>
-              <a href={linkFor(e)} style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;">
+              <a
+                href={entryUrl('wiki', e)}
+                style="text-decoration:none;color:inherit;display:block;padding:.75rem 1rem;border:1px solid var(--sl-color-gray-5);border-radius:6px;"
+              >
                 <div style="margin-bottom:.25rem;">
                   <strong>{e.data.title}</strong>
                 </div>
