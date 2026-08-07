@@ -1,0 +1,162 @@
+---
+import MainLayout from '~/layouts/MainLayout.astro';
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths = (async () => {
+  const entries = await getCollection('wiki', ({ data }) => !data.draft);
+  return Promise.all(
+    entries.map(async (entry) => {
+      const slug = entry.id.replace(/\.md$/, '');
+      const { Content } = await render(entry);
+      return {
+        params: { slug },
+        props: { entry, Content },
+      };
+    }),
+  );
+}) satisfies GetStaticPaths;
+
+type WikiEntry = Awaited<ReturnType<typeof getCollection<'wiki'>>>[number];
+type RenderedContent = Awaited<ReturnType<typeof render>>;
+
+interface Props {
+  entry: WikiEntry;
+  Content: RenderedContent['Content'];
+}
+
+const { entry, Content } = Astro.props;
+const { data } = entry;
+---
+
+<MainLayout title={data.title} description={data.description}>
+  <article class="wiki-entry">
+    <header class="entry-head">
+      <h1>{data.title}</h1>
+      <div class="entry-meta">
+        {data.updatedDate && (
+          <time datetime={data.updatedDate.toISOString()}>
+            更新于 {data.updatedDate.toLocaleDateString('zh-CN')}
+          </time>
+        )}
+        {data.tags?.length > 0 && (
+          <ul class="tag-list">
+            {data.tags.map((t) => (
+              <li class="tag">#{t}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {data.description && <p class="entry-desc">{data.description}</p>}
+    </header>
+    <div class="entry-content">
+      <Content />
+    </div>
+  </article>
+</MainLayout>
+
+<style>
+  .wiki-entry {
+    max-width: 52rem;
+    margin: 0 auto;
+  }
+  .entry-head {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--sl-color-gray-6, #e5e7eb);
+  }
+  .entry-head h1 {
+    margin: 0 0 1rem 0;
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    line-height: 1.25;
+    color: var(--sl-color-text, #111827);
+  }
+  .entry-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    color: var(--sl-color-text-accent, #6b7280);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.1875rem 0.5625rem;
+    border-radius: 9999px;
+    color: var(--sl-color-accent, #2563eb);
+    background: color-mix(in srgb, var(--sl-color-accent, #2563eb) 10%, transparent);
+  }
+  .entry-desc {
+    margin: 0;
+    color: var(--sl-color-text-accent, #6b7280);
+    line-height: 1.7;
+    font-size: 1rem;
+  }
+  .entry-content {
+    line-height: 1.8;
+    color: var(--sl-color-text, #111827);
+  }
+  .entry-content :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  .entry-content :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+  }
+  .entry-content :global(p) {
+    margin: 1rem 0;
+  }
+  .entry-content :global(ul),
+  .entry-content :global(ol) {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+  .entry-content :global(blockquote) {
+    margin: 1.25rem 0;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid var(--sl-color-accent, #2563eb);
+    background: color-mix(in srgb, var(--sl-color-accent, #2563eb) 6%, transparent);
+    color: var(--sl-color-text, #374151);
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  .entry-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+  }
+  .entry-content :global(a) {
+    color: var(--sl-color-accent, #2563eb);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .entry-content :global(code) {
+    padding: 0.125rem 0.375rem;
+    font-size: 0.875em;
+    border-radius: 0.375rem;
+    background: var(--sl-color-gray-7, #f3f4f6);
+  }
+  .entry-content :global(pre) {
+    padding: 1rem 1.25rem;
+    border-radius: 0.625rem;
+    overflow-x: auto;
+    background: var(--sl-color-gray-7, #f3f4f6);
+    margin: 1.25rem 0;
+  }
+  .entry-content :global(pre code) {
+    background: transparent;
+    padding: 0;
+  }
+</style>
