@@ -1,0 +1,127 @@
+---
+import MainLayout from '~/layouts/MainLayout.astro';
+import siteConfig from '~/config/site';
+---
+
+<MainLayout title={siteConfig.works.title} description={siteConfig.works.lead}>
+  <section class="page-section works-page">
+    <header class="page-head">
+      <div>
+        <h1 class="page-title">{siteConfig.works.title}</h1>
+        {siteConfig.works.titleEn && (
+          <p class="page-subtitle-en">{siteConfig.works.titleEn}</p>
+        )}
+      </div>
+      {siteConfig.works.lead && <p class="page-lead">{siteConfig.works.lead}</p>}
+    </header>
+
+    <div class="works-grid">
+      {siteConfig.works.items.map((item) => {
+        const Tag = item.link ? 'a' : 'div';
+        const tags = item.tags ?? [];
+        return (
+          <Tag
+            class={['work-card', item.link ? 'work-card-link' : ''].filter(Boolean).join(' ')}
+            {...(item.link ? { href: item.link } : {})}
+          >
+            <div class="work-card-head">
+              <h2>{item.title}</h2>
+            </div>
+            {item.summary && <p class="work-card-summary">{item.summary}</p>}
+            {tags.length > 0 && (
+              <ul class="tag-list">
+                {tags.map((t) => (
+                  <li class="tag">{t}</li>
+                ))}
+              </ul>
+            )}
+          </Tag>
+        );
+      })}
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .page-section {
+    padding: 1rem 0 2rem 0;
+  }
+  .page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--sl-color-gray-6, #e5e7eb);
+  }
+  .page-title {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--sl-color-text, #111827);
+  }
+  .page-subtitle-en {
+    margin: 0.375rem 0 0 0;
+    color: var(--sl-color-text-accent, #6b7280);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .page-lead {
+    margin: 0;
+    max-width: 32rem;
+    color: var(--sl-color-text-accent, #6b7280);
+    line-height: 1.7;
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1rem;
+  }
+  .work-card {
+    display: block;
+    padding: 1.5rem;
+    border: 1px solid var(--sl-color-gray-6, #e5e7eb);
+    border-radius: 0.875rem;
+    background: var(--sl-color-bg, #ffffff);
+    color: inherit;
+  }
+  .work-card-link {
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .work-card-link:hover {
+    border-color: var(--sl-color-accent, #2563eb);
+    transform: translateY(-2px);
+  }
+  .work-card-head {
+    margin-bottom: 0.5rem;
+  }
+  .work-card-head h2 {
+    margin: 0;
+    font-size: 1.125rem;
+    color: var(--sl-color-text, #111827);
+  }
+  .work-card-summary {
+    margin: 0 0 0.875rem 0;
+    color: var(--sl-color-text-accent, #6b7280);
+    line-height: 1.65;
+    font-size: 0.9375rem;
+  }
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.1875rem 0.5625rem;
+    border-radius: 9999px;
+    color: var(--sl-color-accent, #2563eb);
+    background: color-mix(in srgb, var(--sl-color-accent, #2563eb) 10%, transparent);
+  }
+</style>
