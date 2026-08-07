@@ -49,20 +49,6 @@ const rehypePlugins = [
   [rehypePrettyCode, { theme: 'github-dark' }],
 ];
 
-const starlightLogo = (() => {
-  const { logo, logoAlternate, logoText, logoWidth, logoHeight, title } = siteConfig;
-  if (logo && logoAlternate) {
-    return {
-      light: { src: logo, replacesTitle: !logoText, width: logoWidth, height: logoHeight, alt: title },
-      dark: { src: logoAlternate, replacesTitle: !logoText, width: logoWidth, height: logoHeight, alt: title },
-    };
-  }
-  if (logo) {
-    return { src: logo, replacesTitle: !logoText, width: logoWidth, height: logoHeight, alt: title };
-  }
-  return undefined;
-})();
-
 const starlightTitle = siteConfig.logoText || siteConfig.title;
 
 export default defineConfig({
@@ -75,7 +61,6 @@ export default defineConfig({
     starlight({
       title: starlightTitle,
       description: siteConfig.description,
-      logo: starlightLogo,
       defaultLocale: 'root',
       locales: siteConfig.locale,
       customCss: ['./src/styles/custom.css'],

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="pineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d6a4f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1b4332;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="seaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3a86ff;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="trunkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#78350f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#92400e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
+  <g transform="translate(22,14)">
+    <polygon points="10,0 22,18 -2,18" fill="url(#pineGrad)"/>
+    <polygon points="10,7 24,28 -4,28" fill="url(#pineGrad)" opacity="0.95"/>
+    <polygon points="10,16 25,38 -5,38" fill="url(#pineGrad)" opacity="0.9"/>
+    <rect x="7.5" y="38" width="5" height="8" rx="1" fill="url(#trunkGrad)"/>
+  </g>
+  <g transform="translate(12,54)" opacity="0.85">
+    <path d="M0 0 Q5 -4 10 0 T20 0 T30 0 T40 0" fill="none" stroke="url(#seaGrad)" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>
