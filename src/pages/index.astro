@@ -10,16 +10,72 @@ const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
 const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 4);
+
+const features = [
+  {
+    title: '体系化知识库',
+    description: '围绕编程智能体的操作手册、框架与方法论，结构化组织与检索。',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>`,
+  },
+  {
+    title: '实战案例沉淀',
+    description: '记录 AI 编程工具链的真实落地经验、踩坑记录与迭代优化过程。',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14,2 14,8 20,8"/></svg>`,
+  },
+  {
+    title: '基础设施编排',
+    description: 'Docker Compose + Traefik + Nginx 三层分离部署，ACME 证书半自动化管理。',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>`,
+  },
+  {
+    title: '框架原生实践',
+    description: '基于 Astro + Starlight，遵循 Content Collections 规范，减少过度自定制。',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
+  },
+];
 ---
 
 <MainLayout>
   <section class="hero">
+    <div class="hero-aurora" aria-hidden="true"></div>
+    <div class="hero-grid" aria-hidden="true"></div>
     <div class="hero-inner">
-      <h1 class="hero-title">{siteConfig.title}</h1>
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span>Something Haisong know</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="hero-title-main">{siteConfig.title}</span>
+        <span class="hero-title-grad">构建编程智能体知识体系</span>
+      </h1>
       <p class="hero-subtitle">{siteConfig.description}</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="/blog/">进入文章</a>
-        <a class="btn btn-secondary" href="/wiki/">浏览知识库</a>
+        <a class="btn btn-primary" href="/wiki/">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          进入知识库
+        </a>
+        <a class="btn btn-secondary" href="/blog/">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14,2 14,8 20,8"/></svg>
+          浏览文章
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="features-inner">
+      <div class="features-head">
+        <h2 class="features-title">站在巨人肩上</h2>
+        <p class="features-lead">一切围绕可复用的框架、方法与 SOP 展开。</p>
+      </div>
+      <div class="features-grid">
+        {features.map((f) => (
+          <div class="feature-card">
+            <div class="feature-icon" set:html={f.icon} />
+            <h3 class="feature-title">{f.title}</h3>
+            <p class="feature-desc">{f.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -89,62 +145,260 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
 
 <style>
   .hero {
-    padding: 2rem 0 3rem 0;
+    position: relative;
+    padding: 5rem 0 4.5rem 0;
     text-align: center;
+    overflow: hidden;
   }
+
+  .hero-aurora {
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80rem;
+    height: 40rem;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(37, 99, 235, 0.18), transparent 50%),
+      radial-gradient(ellipse at 80% 40%, rgba(168, 85, 247, 0.14), transparent 55%),
+      radial-gradient(ellipse at 50% 80%, rgba(16, 185, 129, 0.12), transparent 50%);
+    filter: blur(20px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  [data-theme='dark'] .hero-aurora {
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(96, 165, 250, 0.22), transparent 50%),
+      radial-gradient(ellipse at 80% 40%, rgba(192, 132, 252, 0.18), transparent 55%),
+      radial-gradient(ellipse at 50% 80%, rgba(52, 211, 153, 0.14), transparent 50%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--sl-color-gray-6, rgba(229,231,235,0.4)) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sl-color-gray-6, rgba(229,231,235,0.4)) 1px, transparent 1px);
+    background-size: 3rem 3rem;
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  [data-theme='dark'] .hero-grid {
+    background-image:
+      linear-gradient(rgba(75, 85, 99, 0.25) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(75, 85, 99, 0.25) 1px, transparent 1px);
+  }
+
   .hero-inner {
-    max-width: 48rem;
+    position: relative;
+    max-width: 56rem;
     margin: 0 auto;
+    z-index: 1;
   }
-  .hero-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    margin: 0 0 1rem 0;
-    color: var(--sl-color-text, #111827);
-    letter-spacing: -0.01em;
-  }
-  .hero-subtitle {
-    font-size: 1.125rem;
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.875rem;
+    border-radius: 9999px;
+    border: 1px solid var(--sl-color-gray-5, rgba(209,213,219,0.8));
+    background: var(--sl-color-bg, rgba(255,255,255,0.7));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 0.8125rem;
+    font-weight: 500;
     color: var(--sl-color-text-accent, #6b7280);
-    margin: 0 0 2rem 0;
-    line-height: 1.7;
+    margin-bottom: 1.75rem;
   }
+
+  .hero-badge-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  }
+
+  .hero-title {
+    margin: 0 0 1.25rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-title-main {
+    font-size: clamp(2.5rem, 5.5vw, 4rem);
+    font-weight: 800;
+    color: var(--sl-color-text, #111827);
+  }
+
+  .hero-title-grad {
+    font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, #2563eb 0%, #a855f7 50%, #ec4899 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    font-size: 1.15rem;
+    color: var(--sl-color-text-accent, #6b7280);
+    margin: 0 auto 2.25rem auto;
+    max-width: 40rem;
+    line-height: 1.75;
+  }
+
   .hero-cta {
     display: inline-flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    justify-content: center;
+    gap: 0.875rem;
   }
+
   .btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    border-radius: 0.625rem;
     font-weight: 600;
+    font-size: 0.9375rem;
     text-decoration: none;
-    transition: all 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
   }
+
+  .btn svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
   .btn-primary {
-    background: var(--sl-color-accent, #2563eb);
+    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
     color: #ffffff;
+    box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.35);
   }
+
   .btn-primary:hover {
-    background: var(--sl-color-accent-high, #1d4ed8);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.45);
+    background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%);
   }
+
   .btn-secondary {
-    background: var(--sl-color-gray-7, #f3f4f6);
+    background: var(--sl-color-bg, #ffffff);
     color: var(--sl-color-text, #111827);
     border: 1px solid var(--sl-color-gray-5, #d1d5db);
   }
+
   .btn-secondary:hover {
-    background: var(--sl-color-gray-6, #e5e7eb);
+    transform: translateY(-1px);
+    border-color: var(--sl-color-accent, #2563eb);
+    color: var(--sl-color-accent, #2563eb);
+  }
+
+  .features {
+    padding: 2rem 0 1rem 0;
+  }
+
+  .features-inner {
+    max-width: 72rem;
+    margin: 0 auto;
+  }
+
+  .features-head {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .features-title {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 750;
+    color: var(--sl-color-text, #111827);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.01em;
+  }
+
+  .features-lead {
+    font-size: 1.05rem;
+    color: var(--sl-color-text-accent, #6b7280);
+    margin: 0;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+    border-radius: 0.875rem;
+    border: 1px solid var(--sl-color-gray-6, #e5e7eb);
+    background: var(--sl-color-bg, #ffffff);
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .feature-card:hover {
+    border-color: var(--sl-color-accent-low, rgba(37, 99, 235, 0.35));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.08);
+  }
+
+  .feature-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(168, 85, 247, 0.1));
+    color: var(--sl-color-accent, #2563eb);
+  }
+
+  [data-theme='dark'] .feature-icon {
+    background: linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(192, 132, 252, 0.15));
+  }
+
+  .feature-icon :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke-width: 2;
+  }
+
+  .feature-title {
+    font-size: 1.0625rem;
+    font-weight: 650;
+    margin: 0 0 0.375rem 0;
+    color: var(--sl-color-text, #111827);
+  }
+
+  .feature-desc {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--sl-color-text-accent, #6b7280);
+    margin: 0;
   }
 
   .overview {
-    padding: 2rem 0 1rem 0;
+    padding: 3rem 0 1rem 0;
   }
+
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
     gap: 1.25rem;
   }
+
   .card {
     display: block;
     padding: 1.75rem;
@@ -153,35 +407,42 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
     background: var(--sl-color-bg, #ffffff);
     color: inherit;
     text-decoration: none;
-    transition: border-color 0.15s ease, transform 0.15s ease;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
     display: flex;
     flex-direction: column;
   }
+
   .card:hover {
     border-color: var(--sl-color-accent, #2563eb);
     transform: translateY(-2px);
+    box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.08);
   }
+
   .card-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     margin-bottom: 0.5rem;
   }
+
   .card-head h2 {
     margin: 0;
     font-size: 1.375rem;
     color: var(--sl-color-text, #111827);
   }
+
   .card-meta {
     font-size: 0.8125rem;
     color: var(--sl-color-text-accent, #6b7280);
   }
+
   .card > p {
     margin: 0 0 1rem 0;
     color: var(--sl-color-text-accent, #6b7280);
     line-height: 1.65;
     flex: 1;
   }
+
   .mini-list {
     list-style: none;
     padding: 0;
@@ -189,6 +450,7 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
     display: grid;
     gap: 0.5rem;
   }
+
   .mini-list li {
     display: flex;
     align-items: center;
@@ -196,6 +458,7 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
     font-size: 0.9375rem;
     color: var(--sl-color-text, #374151);
   }
+
   .dot {
     width: 0.375rem;
     height: 0.375rem;
@@ -203,10 +466,12 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
     background: var(--sl-color-accent, #2563eb);
     flex-shrink: 0;
   }
+
   .card-foot {
     margin-top: auto;
     padding-top: 0.5rem;
   }
+
   .card-more {
     font-size: 0.9375rem;
     font-weight: 600;

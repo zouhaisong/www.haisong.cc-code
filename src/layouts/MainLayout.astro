@@ -49,6 +49,21 @@ const currentYear = new Date().getFullYear();
     {siteConfig.seo.defaultTwitterImage && (
       <meta name="twitter:image" content={siteConfig.seo.defaultTwitterImage} />
     )}
+
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored || (prefersDark ? 'dark' : 'light');
+          if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body class="layout">
     <header class="site-header">
@@ -56,15 +71,59 @@ const currentYear = new Date().getFullYear();
         <a href="/" class="site-brand" aria-label={siteConfig.title}>
           <Logo />
         </a>
-        <nav class="site-nav" aria-label="主导航">
-          <ul>
-            {siteConfig.navigation.header.map((item) => (
-              <li>
-                <a href={item.link}>{item.label}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div class="site-header-right">
+          <nav class="site-nav" aria-label="主导航">
+            <ul>
+              {siteConfig.navigation.header.map((item) => (
+                <li>
+                  <a href={item.link}>{item.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <button
+            id="theme-toggle"
+            class="theme-toggle"
+            type="button"
+            aria-label="切换主题"
+            title="切换主题"
+          >
+            <svg
+              class="theme-icon theme-icon-sun"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            <svg
+              class="theme-icon theme-icon-moon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -77,20 +136,70 @@ const currentYear = new Date().getFullYear();
         <p>© {currentYear} {siteConfig.title}. All rights reserved.</p>
       </div>
     </footer>
+
+    <script>
+      (function () {
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        const html = document.documentElement;
+        btn.addEventListener('click', function () {
+          const current = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+          const next = current === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', next);
+          try {
+            localStorage.setItem('theme', next);
+          } catch (e) {}
+        });
+      })();
+    </script>
   </body>
 </html>
 
 <style>
+  :global(:root) {
+    --sl-color-bg: #ffffff;
+    --sl-color-text: #111827;
+    --sl-color-text-accent: #6b7280;
+    --sl-color-gray-5: #d1d5db;
+    --sl-color-gray-6: #e5e7eb;
+    --sl-color-gray-7: #f3f4f6;
+    --sl-color-accent: #2563eb;
+    --sl-color-accent-high: #1d4ed8;
+    --sl-color-accent-low: rgba(37, 99, 235, 0.25);
+  }
+
+  :global([data-theme='dark']) {
+    --sl-color-bg: #0f172a;
+    --sl-color-text: #e5e7eb;
+    --sl-color-text-accent: #94a3b8;
+    --sl-color-gray-5: #334155;
+    --sl-color-gray-6: #1e293b;
+    --sl-color-gray-7: #1e293b;
+    --sl-color-accent: #60a5fa;
+    --sl-color-accent-high: #3b82f6;
+    --sl-color-accent-low: rgba(96, 165, 250, 0.25);
+    color-scheme: dark;
+  }
+
+  :global([data-theme='dark'] body) {
+    background-color: var(--sl-color-bg);
+  }
+
   .layout {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     margin: 0;
+    background-color: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   .site-header {
-    border-bottom: 1px solid var(--sl-color-gray-6, #e5e7eb);
-    background: var(--sl-color-bg, #ffffff);
+    border-bottom: 1px solid var(--sl-color-gray-6);
+    background: color-mix(in srgb, var(--sl-color-bg) 85%, transparent);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -113,6 +222,12 @@ const currentYear = new Date().getFullYear();
     color: inherit;
   }
 
+  .site-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
   .site-nav ul {
     list-style: none;
     display: flex;
@@ -123,12 +238,61 @@ const currentYear = new Date().getFullYear();
 
   .site-nav a {
     text-decoration: none;
-    color: var(--sl-color-text, #1f2937);
+    color: var(--sl-color-text);
     font-weight: 500;
+    transition: color 0.15s ease;
   }
 
   .site-nav a:hover {
-    color: var(--sl-color-accent, #2563eb);
+    color: var(--sl-color-accent);
+  }
+
+  .theme-toggle {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: 1px solid var(--sl-color-gray-5);
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-accent);
+  }
+
+  .theme-toggle:active {
+    transform: scale(0.96);
+  }
+
+  .theme-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    stroke-width: 2;
+  }
+
+  .theme-icon-moon {
+    display: none;
+  }
+
+  [data-theme='dark'] .theme-icon-sun {
+    display: none;
+  }
+
+  [data-theme='dark'] .theme-icon-moon {
+    display: block;
+  }
+
+  @media (max-width: 640px) {
+    .site-nav {
+      display: none;
+    }
   }
 
   .site-main {
@@ -141,15 +305,15 @@ const currentYear = new Date().getFullYear();
   }
 
   .site-footer {
-    border-top: 1px solid var(--sl-color-gray-6, #e5e7eb);
-    background: var(--sl-color-bg, #ffffff);
+    border-top: 1px solid var(--sl-color-gray-6);
+    background: var(--sl-color-bg);
   }
 
   .site-footer-inner {
     max-width: 72rem;
     margin: 0 auto;
     padding: 1.5rem;
-    color: var(--sl-color-text-accent, #6b7280);
+    color: var(--sl-color-text-accent);
     font-size: 0.875rem;
   }
 
