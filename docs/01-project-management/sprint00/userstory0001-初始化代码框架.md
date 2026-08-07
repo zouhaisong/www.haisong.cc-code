@@ -13,7 +13,7 @@ owner:
 
 ## 用户故事陈述
 
-**作为** 知识库与博客系统的站点维护者，
+**作为** 知识库与文章系统的站点维护者，
 
 **我希望** 在 `www.haisong.cc-code` 单仓内初始化一套可运行的三层架构代码框架（编辑层 VSCode+Foam 规范、构建层 Astro+Starlight、发布层 Docker Compose+Traefik+Nginx），并使 Blog / Wiki（多领域）/ Solutions 三大类内容通过 Content Collections 强类型接入、Wikilinks 与同名附件目录可用，
 
@@ -52,7 +52,7 @@ owner:
    - Markdown：`remark-frontmatter`、`remark-gfm`、`remark-breaks`、`remark-wiki-link`；`rehype-slug`、`rehype-autolink-headings`、`rehype-pretty-code`
    - 图片：`image.service = 'astro/assets/services/sharp'`
    - Starlight 配置：中文 locale；侧栏按 Blog / Wiki / Solutions 分组占位；自定义 CSS 入口保留
-5. `package.json` 包含脚本：`dev` / `start` / `build` / `preview` / `check` / `astro` / `clean`；依赖清单与 3.2 核心依赖一致（astro/starlight/sitemap/rss/tailwind/vite/astro-tailwind/sharp/remark-*/rehype-*/mdx）
+5. `package.json` 包含脚本：`dev` / `start` / `build` / `preview` / `check` / `astro` / `clean`；依赖清单与 3.2 核心依赖一致（astro/starlight/sitemap/rss/tailwind/vite/astro-tailwind/sharp/remark-_/rehype-_/mdx）
 6. `.astro/` 缓存、`node_modules/.astro` 已加入 `.gitignore`
 
 ### AC-03 Content Collections：Blog / Wiki / Solutions 三大类 + 多领域接入
@@ -102,18 +102,18 @@ owner:
 
 ## 任务拆解（Task Breakdown）
 
-| 步骤 | 任务 | 产物 / 说明 | 关联验收标准 |
-|------|------|------------|-------------|
-| T1 | 初始化 Astro Starlight 项目骨架 | 执行 `npm create astro@latest . -- --template starlight --no-install`；按 3.2 补充依赖；`package.json` scripts 补齐 | AC-02.4 / 5 |
-| T2 | 接入插件链与 sharp | `astro.config.mjs` 补齐 integrations、markdown、image 配置；shiki/主题按默认 | AC-02.4 / AC-04.2 |
-| T3 | 编辑层工作区规范落地 | `.vscode/extensions.json`、`.vscode/settings.json`、`.vscode/foam.json` 三件套；Foam + paste-image 按规范 | AC-01 |
-| T4 | Content Collections schema 与 collection 定义 | `src/content/config.ts` 写入共享 schema + 11 个 collection（Blog/Wiki多领域/Solutions/notes），匹配路由映射表 | AC-03.1 / 2 |
-| T5 | 内容目录结构 + 示例笔记 | 创建 12 个内容目录 + `.gitkeep`；每 collection 至少 1 篇示例；含 2 篇跨域 Wikilinks 示例 + 1 篇图片附件示例 | AC-03.3 / 4 / AC-04.1 / 2 |
-| T6 | 发布层骨架 | `deploy/docker-compose.yml` + `traefik.yml` + `nginx.conf` + `acme/.gitkeep` | AC-05.1 |
-| T7 | `.gitignore` 落地 | 状态与运行时条目按 AC-06.1 全量覆盖；白名单无冲突 | AC-06 |
-| T8 | 依赖安装与首次校验闭环 | `npm ci` → `npm run check` → `npm run build` → `npm run preview` 验证；修复 schema / 类型 / 链接 404 / 图片 404 | AC-02.1–3 / AC-03.4 / AC-04 / AC-07 |
-| T9 | Docker Compose 本地联调 | 完成 T8 生成 `dist/` 后 `cd deploy && docker compose up -d`；验证 HTTP 访问首页与静态资源；最后 `docker compose down` 清理 | AC-05.2 / 3 / 4 |
-| T10 | Pagefind 验证 | `npx -y pagefind --site dist` 成功生成 `pagefind/` 索引目录；命令写入 `package.json` scripts（如 `"index": "npx -y pagefind --site dist"`）但不默认执行 | AC-07.2 |
+| 步骤 | 任务                                          | 产物 / 说明                                                                                                                                             | 关联验收标准                        |
+| ---- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| T1   | 初始化 Astro Starlight 项目骨架               | 执行 `npm create astro@latest . -- --template starlight --no-install`；按 3.2 补充依赖；`package.json` scripts 补齐                                     | AC-02.4 / 5                         |
+| T2   | 接入插件链与 sharp                            | `astro.config.mjs` 补齐 integrations、markdown、image 配置；shiki/主题按默认                                                                            | AC-02.4 / AC-04.2                   |
+| T3   | 编辑层工作区规范落地                          | `.vscode/extensions.json`、`.vscode/settings.json`、`.vscode/foam.json` 三件套；Foam + paste-image 按规范                                               | AC-01                               |
+| T4   | Content Collections schema 与 collection 定义 | `src/content/config.ts` 写入共享 schema + 11 个 collection（Blog/Wiki多领域/Solutions/notes），匹配路由映射表                                           | AC-03.1 / 2                         |
+| T5   | 内容目录结构 + 示例笔记                       | 创建 12 个内容目录 + `.gitkeep`；每 collection 至少 1 篇示例；含 2 篇跨域 Wikilinks 示例 + 1 篇图片附件示例                                             | AC-03.3 / 4 / AC-04.1 / 2           |
+| T6   | 发布层骨架                                    | `deploy/docker-compose.yml` + `traefik.yml` + `nginx.conf` + `acme/.gitkeep`                                                                            | AC-05.1                             |
+| T7   | `.gitignore` 落地                             | 状态与运行时条目按 AC-06.1 全量覆盖；白名单无冲突                                                                                                       | AC-06                               |
+| T8   | 依赖安装与首次校验闭环                        | `npm ci` → `npm run check` → `npm run build` → `npm run preview` 验证；修复 schema / 类型 / 链接 404 / 图片 404                                         | AC-02.1–3 / AC-03.4 / AC-04 / AC-07 |
+| T9   | Docker Compose 本地联调                       | 完成 T8 生成 `dist/` 后 `cd deploy && docker compose up -d`；验证 HTTP 访问首页与静态资源；最后 `docker compose down` 清理                              | AC-05.2 / 3 / 4                     |
+| T10  | Pagefind 验证                                 | `npx -y pagefind --site dist` 成功生成 `pagefind/` 索引目录；命令写入 `package.json` scripts（如 `"index": "npx -y pagefind --site dist"`）但不默认执行 | AC-07.2                             |
 
 ---
 

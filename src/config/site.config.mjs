@@ -1,5 +1,6 @@
 export const siteConfig = {
   title: '海松知道',
+  titleEn: 'Something Haisong know',
   description: '沉淀编程智能体实践方法论与体系化知识',
   locale: {
     lang: 'zh-CN',
@@ -10,6 +11,7 @@ export const siteConfig = {
     src: '/images/logo.svg',
     alternate: '/images/logo-dark.svg',
     text: '海松知道',
+    textEn: 'Something Haisong know',
   },
   favicon: '/favicon.svg',
   seo: {
@@ -32,8 +34,8 @@ export const siteConfig = {
   },
   navigation: {
     header: [
-      { label: '博客', link: '/blog/' },
-      { label: '维基', link: '/wiki/' },
+      { label: '文章', link: '/blog/' },
+      { label: '知识库', link: '/wiki/' },
     ],
   },
 };

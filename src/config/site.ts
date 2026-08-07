@@ -9,6 +9,7 @@ export interface SiteLogo {
   src: string;
   alternate?: string;
   text?: string;
+  textEn?: string;
 }
 
 export interface SiteSeoTwitter {
@@ -35,6 +36,7 @@ export interface SiteNavigation {
 
 export interface SiteConfig {
   title: string;
+  titleEn?: string;
   description: string;
   locale: SiteLocale;
   url: string;

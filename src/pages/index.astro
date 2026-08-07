@@ -18,8 +18,8 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
       <h1 class="hero-title">{siteConfig.title}</h1>
       <p class="hero-subtitle">{siteConfig.description}</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="/blog/">进入博客</a>
-        <a class="btn btn-secondary" href="/wiki/">浏览维基</a>
+        <a class="btn btn-primary" href="/blog/">进入文章</a>
+        <a class="btn btn-secondary" href="/wiki/">浏览知识库</a>
       </div>
     </div>
   </section>
@@ -28,7 +28,7 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
     <div class="cards">
       <a class="card" href="/blog/">
         <div class="card-head">
-          <h2>博客</h2>
+          <h2>文章</h2>
           <span class="card-meta">{recentPosts.length > 0 ? '最新文章' : '内容入口'}</span>
         </div>
         <p>记录编程智能体的实战经验、踩坑与方法论沉淀。</p>
@@ -46,7 +46,7 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
 
       <a class="card" href="/wiki/">
         <div class="card-head">
-          <h2>维基</h2>
+          <h2>知识库</h2>
           <span class="card-meta">{wikiEntries.length > 0 ? '精选条目' : '知识库'}</span>
         </div>
         <p>体系化组织的知识点与操作手册，用于可复用框架的检索。</p>

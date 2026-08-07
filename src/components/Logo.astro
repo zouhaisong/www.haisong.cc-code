@@ -15,13 +15,14 @@ const {
   height = 32,
 } = Astro.props;
 
-const { logo, title } = siteConfig;
+const { logo, title, titleEn } = siteConfig;
 const lightSrc = propsSrc ?? logo.src;
 const darkSrc = propsSrc ?? logo.alternate ?? logo.src;
 const altText = propsAlt ?? logo.text ?? title;
 const hasImage = Boolean(lightSrc);
 const hasDarkVariant = darkSrc !== lightSrc;
 const fallbackText = logo.text ?? title;
+const fallbackTextEn = logo.textEn ?? titleEn;
 ---
 
 <span class="logo">
@@ -49,17 +50,22 @@ const fallbackText = logo.text ?? title;
       )}
     </>
   ) : null}
-  {fallbackText && (
-    <span class="logo-text">{fallbackText}</span>
-  )}
+  <span class="logo-text-block">
+    {fallbackText && (
+      <span class="logo-text">{fallbackText}</span>
+    )}
+    {fallbackTextEn && (
+      <span class="logo-text-en">{fallbackTextEn}</span>
+    )}
+  </span>
 </span>
 
 <style>
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    line-height: 1;
+    gap: 0.625rem;
+    line-height: 1.1;
     font-weight: 700;
     font-size: 1.125rem;
   }
@@ -96,7 +102,22 @@ const fallbackText = logo.text ?? title;
     display: block;
   }
 
+  .logo-text-block {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
   .logo-text {
     color: var(--sl-color-text, #111827);
+    line-height: 1;
+  }
+
+  .logo-text-en {
+    color: var(--sl-color-text-accent, #6b7280);
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+    line-height: 1;
   }
 </style>

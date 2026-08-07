@@ -33,13 +33,13 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: '博客',
+          label: '文章',
           link: '/blog/',
         },
         {
-          label: '维基',
+          label: '知识库',
           items: [
-            { link: '/wiki/', label: '维基首页' },
+            { link: '/wiki/', label: '知识库首页' },
             { autogenerate: { directory: 'wiki' } },
           ],
         },
@@ -56,7 +56,7 @@ export default defineConfig({
       ],
       plugins: [
         starlightBlog({
-          title: '博客',
+          title: '文章',
           authors: {},
           postsPerPage: 10,
           recentPostCount: 5,

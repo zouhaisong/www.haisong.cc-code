@@ -6,10 +6,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<MainLayout title="博客" description="沉淀与分享编程智能体实践心得与经验">
+<MainLayout title="文章" description="沉淀与分享编程智能体实践心得与经验">
   <section class="blog-index">
     <header class="section-header">
-      <h1>博客</h1>
+      <h1>文章</h1>
       <p class="section-lead">共 {posts.length} 篇文章</p>
     </header>
 
