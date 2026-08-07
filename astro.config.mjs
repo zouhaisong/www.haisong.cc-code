@@ -14,6 +14,8 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrettyCode from 'rehype-pretty-code';
 
+import { siteConfig } from './src/config/site.config.mjs';
+
 function pageResolver(permalink) {
   const slug = String(permalink || '')
     .replace(/\.(md|mdx)$/i, '')
@@ -47,6 +49,22 @@ const rehypePlugins = [
   [rehypePrettyCode, { theme: 'github-dark' }],
 ];
 
+const starlightLogo = (() => {
+  const { logo, logoAlternate, logoText, logoWidth, logoHeight, title } = siteConfig;
+  if (logo && logoAlternate) {
+    return {
+      light: { src: logo, replacesTitle: !logoText, width: logoWidth, height: logoHeight, alt: title },
+      dark: { src: logoAlternate, replacesTitle: !logoText, width: logoWidth, height: logoHeight, alt: title },
+    };
+  }
+  if (logo) {
+    return { src: logo, replacesTitle: !logoText, width: logoWidth, height: logoHeight, alt: title };
+  }
+  return undefined;
+})();
+
+const starlightTitle = siteConfig.logoText || siteConfig.title;
+
 export default defineConfig({
   site: 'https://www.haisong.cc',
   trailingSlash: 'ignore',
@@ -55,11 +73,11 @@ export default defineConfig({
   },
   integrations: [
     starlight({
-      title: '海松知道',
+      title: starlightTitle,
+      description: siteConfig.description,
+      logo: starlightLogo,
       defaultLocale: 'root',
-      locales: {
-        root: { label: '简体中文', lang: 'zh-CN' },
-      },
+      locales: siteConfig.locale,
       customCss: ['./src/styles/custom.css'],
     }),
     sitemap(),

@@ -1,0 +1,64 @@
+---
+import { siteConfig } from '../config/site';
+
+interface Props {
+  src?: string;
+  dark?: boolean;
+}
+
+const { logo, logoAlternate, logoText, logoWidth, logoHeight, title } = siteConfig;
+const { src, dark = false } = Astro.props;
+
+const resolvedSrc = src
+  ? src
+  : dark && logoAlternate
+    ? logoAlternate
+    : logo;
+
+const hasLogo = Boolean(resolvedSrc);
+
+function toSentenceCase(input: string): string {
+  if (!input) return '';
+  return input.charAt(0).toUpperCase() + input.slice(1);
+}
+
+const altText = toSentenceCase(`Brand logo of ${title}`);
+---
+
+<a class="site-brand" href="/" aria-label={title}>
+  {hasLogo && (
+    <img
+      src={resolvedSrc}
+      alt={altText}
+      class="logo-image"
+      style={{ width: logoWidth, height: logoHeight }}
+      loading="eager"
+      decoding="async"
+    />
+  )}
+  {logoText && (
+    <span class="logo-text">{logoText}</span>
+  )}
+  {!hasLogo && !logoText && (
+    <span class="logo-text">{title}</span>
+  )}
+</a>
+
+<style>
+  .site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .logo-image {
+    display: block;
+    object-fit: contain;
+  }
+  .logo-text {
+    color: var(--sl-color-text);
+  }
+</style>

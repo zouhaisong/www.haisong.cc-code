@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { slugify, filterPublish } from '../lib/notes.js';
 import MainLayout from '../layouts/MainLayout.astro';
+import { siteConfig } from '../config/site';
 
 type AnyEntry = CollectionEntry<'blog' | 'wiki'>;
 
@@ -24,7 +25,7 @@ function linkFor(collection: string, entry: AnyEntry) {
 <MainLayout>
   <article>
     <header style="padding: 1rem 0;border-bottom: 1px solid var(--sl-color-gray-5);margin-bottom: 1.5rem;">
-      <h1 style="margin:0 0 .5rem;">Sth Haisong know</h1>
+      <h1 style="margin:0 0 .5rem;">{siteConfig.tagline}</h1>
       <p style="margin:0;color:var(--sl-color-gray-3);font-size:.95rem;">
         文章 · 知识库 · 海松
       </p>
@@ -54,7 +55,7 @@ function linkFor(collection: string, entry: AnyEntry) {
         <p style="color:var(--sl-color-gray-3);">暂无文章。</p>
       )}
       <p style="margin-top:1rem;">
-        <a href="/blog/">全部博客 →</a>
+        <a href="/blog/">全部文章 →</a>
       </p>
     </section>
 
@@ -77,7 +78,7 @@ function linkFor(collection: string, entry: AnyEntry) {
         <p style="color:var(--sl-color-gray-3);">暂无条目。</p>
       )}
       <p style="margin-top:1rem;">
-        <a href="/wiki/home/">知识库 →</a>
+        <a href="/wiki/home/">全部知识库 →</a>
       </p>
     </section>
   </article>
