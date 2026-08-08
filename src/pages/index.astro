@@ -13,23 +13,23 @@ const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
 
 const features = [
   {
-    title: '体系化知识库',
-    description: '围绕编程智能体的操作手册、框架与方法论，结构化组织与检索。',
+    title: 'AI编程',
+    description: 'AI编程方法论、工程实践总结。',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>`,
   },
   {
-    title: '实战案例沉淀',
-    description: '记录 AI 编程工具链的真实落地经验、踩坑记录与迭代优化过程。',
+    title: 'AI应用',
+    description: '智能问答、知识库、智能体、知识图谱、人工智能落地场景。',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14,2 14,8 20,8"/></svg>`,
   },
   {
-    title: '基础设施编排',
-    description: 'Docker Compose + Traefik + Nginx 三层分离部署，ACME 证书半自动化管理。',
+    title: '软件工程',
+    description: 'AI时代的软件工程, 软件生命周期、软件研发过程、领域驱动、自动化测试、持续集成、持续交付、DevOps、云原生。',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>`,
   },
   {
-    title: '框架原生实践',
-    description: '基于 Astro + Starlight，遵循 Content Collections 规范，减少过度自定制。',
+    title: '数字化转型落地',
+    description: '用户旅程、事件风暴、领域划分、服务划分、产品探索、产品定义。',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
   },
 ];
@@ -46,7 +46,7 @@ const features = [
       </div>
       <h1 class="hero-title">
         <span class="hero-title-main">{siteConfig.title}</span>
-        <span class="hero-title-grad">构建编程智能体知识体系</span>
+        <span class="hero-title-grad">AI与软件工程的深度融合</span>
       </h1>
       <p class="hero-subtitle">{siteConfig.description}</p>
       <div class="hero-cta">
@@ -65,8 +65,14 @@ const features = [
   <section class="features">
     <div class="features-inner">
       <div class="features-head">
-        <h2 class="features-title">站在巨人肩上</h2>
-        <p class="features-lead">一切围绕可复用的框架、方法与 SOP 展开。</p>
+        <h2 class="features-title">这是一个美好的时代</h2>
+        <figure class="features-quote">
+          <blockquote class="features-lead">
+            <span>工厂在加班工作</span>
+            <span>赶制一架飞机</span>
+            <span>准备在夜里飞往月亮</span>
+          </blockquote>
+        </figure>
       </div>
       <div class="features-grid">
         {features.map((f) => (
@@ -327,10 +333,60 @@ const features = [
     letter-spacing: -0.01em;
   }
 
+  .features-quote {
+    margin: 0.75rem 0 0 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+
   .features-lead {
-    font-size: 1.05rem;
-    color: var(--hs-color-text-accent);
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.35rem;
     margin: 0;
+    padding: 1.25rem 2.25rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--hs-color-text-accent);
+    font-style: italic;
+    font-weight: 450;
+    letter-spacing: 0.02em;
+  }
+
+  .features-lead::before,
+  .features-lead::after {
+    position: absolute;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 3.5rem;
+    line-height: 1;
+    color: var(--hs-color-accent-low, #c7d2fe);
+    font-style: normal;
+    font-weight: 700;
+    opacity: 0.7;
+  }
+
+  .features-lead::before {
+    content: "\201C";
+    top: -0.25rem;
+    left: 0;
+  }
+
+  .features-lead::after {
+    content: "\201D";
+    bottom: -1.25rem;
+    right: 0.25rem;
+  }
+
+  [data-theme='dark'] .features-lead::before,
+  [data-theme='dark'] .features-lead::after {
+    color: rgba(96, 165, 250, 0.35);
+  }
+
+  .features-lead span {
+    display: block;
+    text-align: center;
   }
 
   .features-grid {

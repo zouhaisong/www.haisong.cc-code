@@ -1,7 +1,7 @@
 export const siteConfig = {
   title: '海松知道',
   titleEn: 'Something Haisong know',
-  description: '沉淀编程智能体实践方法论与体系化知识',
+  description: 'AI编程方法论与AI应用实践',
   locale: {
     lang: 'zh-CN',
     label: '简体中文',
