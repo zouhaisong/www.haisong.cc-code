@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 import siteConfig from './src/config/site.config.mjs';
+import rehypeObsidianCallout from './src/plugins/rehype-obsidian-callout.mjs';
 
 export default defineConfig({
   site: siteConfig.url,
@@ -80,6 +81,7 @@ export default defineConfig({
       'rehype-slug',
       ['rehype-autolink-headings', { behavior: 'wrap' }],
       ['rehype-pretty-code', { theme: { light: 'github-light', dark: 'github-dark' } }],
+      rehypeObsidianCallout,
     ],
     shikiConfig: {
       wrap: true,

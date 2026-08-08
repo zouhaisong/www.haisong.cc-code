@@ -197,4 +197,111 @@ const { data } = entry;
   .entry-content :global(tbody tr:hover) {
     background: color-mix(in srgb, var(--sl-color-accent, #2563eb) 4%, transparent);
   }
+  .entry-content :global(.callout) {
+    margin: 1.25rem 0;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--callout-color, var(--sl-color-accent, #2563eb));
+    background: color-mix(in srgb, var(--callout-color, var(--sl-color-accent, #2563eb)) 8%, transparent);
+    overflow: hidden;
+    --callout-color: var(--sl-color-accent, #2563eb);
+  }
+  .entry-content :global(.callout-note),
+  .entry-content :global(.callout-info) {
+    --callout-color: #3b82f6;
+  }
+  .entry-content :global(.callout-tip),
+  .entry-content :global(.callout-hint),
+  .entry-content :global(.callout-success),
+  .entry-content :global(.callout-check),
+  .entry-content :global(.callout-done) {
+    --callout-color: #10b981;
+  }
+  .entry-content :global(.callout-important) {
+    --callout-color: #8b5cf6;
+  }
+  .entry-content :global(.callout-question),
+  .entry-content :global(.callout-help),
+  .entry-content :global(.callout-faq) {
+    --callout-color: #f59e0b;
+  }
+  .entry-content :global(.callout-warning),
+  .entry-content :global(.callout-caution),
+  .entry-content :global(.callout-attention) {
+    --callout-color: #f59e0b;
+  }
+  .entry-content :global(.callout-failure),
+  .entry-content :global(.callout-fail),
+  .entry-content :global(.callout-missing),
+  .entry-content :global(.callout-danger),
+  .entry-content :global(.callout-error),
+  .entry-content :global(.callout-bug) {
+    --callout-color: #ef4444;
+  }
+  .entry-content :global(.callout-example) {
+    --callout-color: #8b5cf6;
+  }
+  .entry-content :global(.callout-quote),
+  .entry-content :global(.callout-cite) {
+    --callout-color: #6b7280;
+  }
+  .entry-content :global(.callout-abstract),
+  .entry-content :global(.callout-summary),
+  .entry-content :global(.callout-tldr) {
+    --callout-color: #06b6d4;
+  }
+  .entry-content :global(.callout-todo) {
+    --callout-color: #0ea5e9;
+  }
+  .entry-content :global(.callout-title) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: var(--callout-color, var(--sl-color-text, #111827));
+    background: color-mix(in srgb, var(--callout-color, var(--sl-color-accent, #2563eb)) 15%, transparent);
+  }
+  .entry-content :global(.callout-icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .entry-content :global(.callout-body) {
+    padding: 0.75rem 1rem;
+    color: var(--sl-color-text, #111827);
+  }
+  .entry-content :global(.callout-body > *:first-child) {
+    margin-top: 0;
+  }
+  .entry-content :global(.callout-body > *:last-child) {
+    margin-bottom: 0;
+  }
+  .entry-content :global(.callout-collapsible) {
+    padding: 0;
+  }
+  .entry-content :global(.callout-collapsible .callout-summary) {
+    list-style: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .entry-content :global(.callout-collapsible .callout-summary::-webkit-details-marker) {
+    display: none;
+  }
+  .entry-content :global(.callout-collapsible .callout-summary::after) {
+    content: '▾';
+    margin-left: auto;
+    font-size: 0.75rem;
+    transition: transform 0.15s ease;
+  }
+  .entry-content :global(.callout-collapsible:not([open]) .callout-summary::after) {
+    transform: rotate(-90deg);
+  }
+  .entry-content :global(.callout-collapsible[open] .callout-body) {
+    border-top: 1px solid color-mix(in srgb, var(--callout-color, var(--sl-color-accent, #2563eb)) 20%, transparent);
+  }
 </style>

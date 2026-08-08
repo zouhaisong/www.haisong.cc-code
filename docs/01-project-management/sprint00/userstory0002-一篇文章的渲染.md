@@ -2,10 +2,10 @@
 
 表格的渲染
 
-右边可以显示TOC
-
 Alert / Callout
 
 ```
 > [!NOTE]
 ```
+
+右边可以显示TOC
