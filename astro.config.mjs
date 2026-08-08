@@ -38,6 +38,11 @@ export default defineConfig({
       },
       favicon: siteConfig.favicon,
       social: [],
+      tableOfContents: {
+        minHeadingLevel: 2,
+        maxHeadingLevel: 4,
+        activeHeadingTracking: true,
+      },
       expressiveCode: {
         themes: ['github-light', 'github-dark'],
       },

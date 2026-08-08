@@ -1,5 +1,6 @@
 ---
 import MainLayout from '~/layouts/MainLayout.astro';
+import TableOfContents from '~/components/TableOfContents.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 
@@ -8,10 +9,10 @@ export const getStaticPaths = (async () => {
   return Promise.all(
     posts.map(async (post) => {
       const slug = post.id.replace(/\.md$/, '');
-      const { Content } = await render(post);
+      const { Content, headings } = await render(post);
       return {
         params: { slug },
-        props: { post, Content },
+        props: { post, Content, headings },
       };
     }),
   );
@@ -23,41 +24,61 @@ type RenderedContent = Awaited<ReturnType<typeof render>>;
 interface Props {
   post: BlogEntry;
   Content: RenderedContent['Content'];
+  headings: RenderedContent['headings'];
 }
 
-const { post, Content } = Astro.props;
+const { post, Content, headings } = Astro.props;
 const { data } = post;
 ---
 
 <MainLayout title={data.title} description={data.description}>
-  <article class="post">
-    <header class="post-head">
-      <h1>{data.title}</h1>
-      <div class="post-meta">
-        <time datetime={data.pubDate.toISOString()}>
-          {data.pubDate.toLocaleDateString('zh-CN')}
-        </time>
-        {data.author && <span class="post-author">作者：{data.author}</span>}
-        {data.tags?.length > 0 && (
-          <ul class="tag-list">
-            {data.tags.map((t) => (
-              <li class="tag">#{t}</li>
-            ))}
-          </ul>
-        )}
+  <div class="post-wrapper">
+    <article class="post">
+      <header class="post-head">
+        <h1>{data.title}</h1>
+        <div class="post-meta">
+          <time datetime={data.pubDate.toISOString()}>
+            {data.pubDate.toLocaleDateString('zh-CN')}
+          </time>
+          {data.author && <span class="post-author">作者：{data.author}</span>}
+          {data.tags?.length > 0 && (
+            <ul class="tag-list">
+              {data.tags.map((t) => (
+                <li class="tag">#{t}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+        {data.description && <p class="post-desc">{data.description}</p>}
+      </header>
+      <div class="post-content">
+        <Content />
       </div>
-      {data.description && <p class="post-desc">{data.description}</p>}
-    </header>
-    <div class="post-content">
-      <Content />
-    </div>
-  </article>
+    </article>
+    <TableOfContents headings={headings} minLevel={2} maxLevel={4} />
+  </div>
 </MainLayout>
 
 <style>
-  .post {
-    max-width: 48rem;
+  .post-wrapper {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    max-width: 100%;
     margin: 0 auto;
+  }
+
+  @media (max-width: 1024px) {
+    .post-wrapper {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  .post {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 52rem;
   }
   .post-head {
     margin-bottom: 2.5rem;

@@ -112,6 +112,8 @@ const currentYear = new Date().getFullYear();
 
       *, *::before, *::after { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      :where(h2, h3, h4, h5, h6) { scroll-margin-top: 5rem; }
       body {
         background-color: var(--hs-color-bg);
         color: var(--hs-color-text);
@@ -319,7 +321,7 @@ const currentYear = new Date().getFullYear();
 
   .site-main {
     min-height: 1px;
-    max-width: 72rem;
+    max-width: 96rem;
     width: 100%;
     margin: 0 auto;
     padding: 3rem 1.5rem;

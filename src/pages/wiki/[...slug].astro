@@ -1,5 +1,6 @@
 ---
 import MainLayout from '~/layouts/MainLayout.astro';
+import TableOfContents from '~/components/TableOfContents.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 
@@ -8,10 +9,10 @@ export const getStaticPaths = (async () => {
   return Promise.all(
     entries.map(async (entry) => {
       const slug = entry.id.replace(/\.md$/, '');
-      const { Content } = await render(entry);
+      const { Content, headings } = await render(entry);
       return {
         params: { slug },
-        props: { entry, Content },
+        props: { entry, Content, headings },
       };
     }),
   );
@@ -23,42 +24,62 @@ type RenderedContent = Awaited<ReturnType<typeof render>>;
 interface Props {
   entry: WikiEntry;
   Content: RenderedContent['Content'];
+  headings: RenderedContent['headings'];
 }
 
-const { entry, Content } = Astro.props;
+const { entry, Content, headings } = Astro.props;
 const { data } = entry;
 ---
 
 <MainLayout title={data.title} description={data.description}>
-  <article class="wiki-entry">
-    <header class="entry-head">
-      <h1>{data.title}</h1>
-      <div class="entry-meta">
-        {data.updatedDate && (
-          <time datetime={data.updatedDate.toISOString()}>
-            更新于 {data.updatedDate.toLocaleDateString('zh-CN')}
-          </time>
-        )}
-        {data.tags?.length > 0 && (
-          <ul class="tag-list">
-            {data.tags.map((t) => (
-              <li class="tag">#{t}</li>
-            ))}
-          </ul>
-        )}
+  <div class="wiki-wrapper">
+    <article class="wiki-entry">
+      <header class="entry-head">
+        <h1>{data.title}</h1>
+        <div class="entry-meta">
+          {data.updatedDate && (
+            <time datetime={data.updatedDate.toISOString()}>
+              更新于 {data.updatedDate.toLocaleDateString('zh-CN')}
+            </time>
+          )}
+          {data.tags?.length > 0 && (
+            <ul class="tag-list">
+              {data.tags.map((t) => (
+                <li class="tag">#{t}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+        {data.description && <p class="entry-desc">{data.description}</p>}
+      </header>
+      <div class="entry-content">
+        <Content />
       </div>
-      {data.description && <p class="entry-desc">{data.description}</p>}
-    </header>
-    <div class="entry-content">
-      <Content />
-    </div>
-  </article>
+    </article>
+    <TableOfContents headings={headings} minLevel={2} maxLevel={4} />
+  </div>
 </MainLayout>
 
 <style>
-  .wiki-entry {
-    max-width: 52rem;
+  .wiki-wrapper {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    max-width: 100%;
     margin: 0 auto;
+  }
+
+  @media (max-width: 1024px) {
+    .wiki-wrapper {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  .wiki-entry {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 56rem;
   }
   .entry-head {
     margin-bottom: 2.5rem;
