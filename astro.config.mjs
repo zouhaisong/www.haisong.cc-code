@@ -3,6 +3,15 @@ import starlight from '@astrojs/starlight';
 import starlightBlog from 'starlight-blog';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import { unified } from '@astrojs/markdown-remark';
+
+import remarkFrontmatter from 'remark-frontmatter';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
+import remarkWikiLink from 'remark-wiki-link';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypePrettyCode from 'rehype-pretty-code';
 
 import siteConfig from './src/config/site.config.mjs';
 import rehypeObsidianCallout from './src/plugins/rehype-obsidian-callout.mjs';
@@ -71,18 +80,20 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [
-      'remark-frontmatter',
-      'remark-gfm',
-      'remark-breaks',
-      ['remark-wiki-link', { pageResolver: (name) => [name] }],
-    ],
-    rehypePlugins: [
-      'rehype-slug',
-      ['rehype-autolink-headings', { behavior: 'wrap' }],
-      ['rehype-pretty-code', { theme: { light: 'github-light', dark: 'github-dark' } }],
-      rehypeObsidianCallout,
-    ],
+    processor: unified({
+      remarkPlugins: [
+        remarkFrontmatter,
+        remarkGfm,
+        remarkBreaks,
+        [remarkWikiLink, { pageResolver: (name) => [name] }],
+      ],
+      rehypePlugins: [
+        rehypeSlug,
+        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+        [rehypePrettyCode, { theme: { light: 'github-light', dark: 'github-dark' } }],
+        rehypeObsidianCallout,
+      ],
+    }),
     shikiConfig: {
       wrap: true,
     },
