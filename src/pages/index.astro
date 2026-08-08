@@ -178,8 +178,8 @@ const features = [
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(var(--sl-color-gray-6, rgba(229,231,235,0.4)) 1px, transparent 1px),
-      linear-gradient(90deg, var(--sl-color-gray-6, rgba(229,231,235,0.4)) 1px, transparent 1px);
+      linear-gradient(var(--hs-color-gray-6) 1px, transparent 1px),
+      linear-gradient(90deg, var(--hs-color-gray-6) 1px, transparent 1px);
     background-size: 3rem 3rem;
     mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%);
     -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%);
@@ -206,13 +206,13 @@ const features = [
     gap: 0.5rem;
     padding: 0.35rem 0.875rem;
     border-radius: 9999px;
-    border: 1px solid var(--sl-color-gray-5, rgba(209,213,219,0.8));
-    background: var(--sl-color-bg, rgba(255,255,255,0.7));
+    border: 1px solid var(--hs-color-gray-5);
+    background: var(--hs-color-bg);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--sl-color-text-accent, #6b7280);
+    color: var(--hs-color-text-accent);
     margin-bottom: 1.75rem;
   }
 
@@ -236,7 +236,7 @@ const features = [
   .hero-title-main {
     font-size: clamp(2.5rem, 5.5vw, 4rem);
     font-weight: 800;
-    color: var(--sl-color-text, #111827);
+    color: var(--hs-color-text);
   }
 
   .hero-title-grad {
@@ -251,7 +251,7 @@ const features = [
 
   .hero-subtitle {
     font-size: 1.15rem;
-    color: var(--sl-color-text-accent, #6b7280);
+    color: var(--hs-color-text-accent);
     margin: 0 auto 2.25rem auto;
     max-width: 40rem;
     line-height: 1.75;
@@ -294,15 +294,15 @@ const features = [
   }
 
   .btn-secondary {
-    background: var(--sl-color-bg, #ffffff);
-    color: var(--sl-color-text, #111827);
+    background: var(--hs-color-bg);
+    color: var(--hs-color-text);
     border: 1px solid var(--sl-color-gray-5, #d1d5db);
   }
 
   .btn-secondary:hover {
     transform: translateY(-1px);
-    border-color: var(--sl-color-accent, #2563eb);
-    color: var(--sl-color-accent, #2563eb);
+    border-color: var(--hs-color-accent);
+    color: var(--hs-color-accent);
   }
 
   .features {
@@ -322,14 +322,14 @@ const features = [
   .features-title {
     font-size: clamp(1.75rem, 3vw, 2.25rem);
     font-weight: 750;
-    color: var(--sl-color-text, #111827);
+    color: var(--hs-color-text);
     margin: 0 0 0.5rem 0;
     letter-spacing: -0.01em;
   }
 
   .features-lead {
     font-size: 1.05rem;
-    color: var(--sl-color-text-accent, #6b7280);
+    color: var(--hs-color-text-accent);
     margin: 0;
   }
 
@@ -343,12 +343,12 @@ const features = [
     padding: 1.5rem;
     border-radius: 0.875rem;
     border: 1px solid var(--sl-color-gray-6, #e5e7eb);
-    background: var(--sl-color-bg, #ffffff);
+    background: var(--hs-color-bg);
     transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .feature-card:hover {
-    border-color: var(--sl-color-accent-low, rgba(37, 99, 235, 0.35));
+    border-color: var(--hs-color-accent-low));
     transform: translateY(-2px);
     box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.08);
   }
@@ -362,7 +362,7 @@ const features = [
     justify-content: center;
     margin-bottom: 1rem;
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(168, 85, 247, 0.1));
-    color: var(--sl-color-accent, #2563eb);
+    color: var(--hs-color-accent);
   }
 
   [data-theme='dark'] .feature-icon {
@@ -379,13 +379,13 @@ const features = [
     font-size: 1.0625rem;
     font-weight: 650;
     margin: 0 0 0.375rem 0;
-    color: var(--sl-color-text, #111827);
+    color: var(--hs-color-text);
   }
 
   .feature-desc {
     font-size: 0.9375rem;
     line-height: 1.65;
-    color: var(--sl-color-text-accent, #6b7280);
+    color: var(--hs-color-text-accent);
     margin: 0;
   }
 
@@ -404,7 +404,7 @@ const features = [
     padding: 1.75rem;
     border: 1px solid var(--sl-color-gray-6, #e5e7eb);
     border-radius: 0.875rem;
-    background: var(--sl-color-bg, #ffffff);
+    background: var(--hs-color-bg);
     color: inherit;
     text-decoration: none;
     transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
@@ -413,7 +413,7 @@ const features = [
   }
 
   .card:hover {
-    border-color: var(--sl-color-accent, #2563eb);
+    border-color: var(--hs-color-accent);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.08);
   }
@@ -428,17 +428,17 @@ const features = [
   .card-head h2 {
     margin: 0;
     font-size: 1.375rem;
-    color: var(--sl-color-text, #111827);
+    color: var(--hs-color-text);
   }
 
   .card-meta {
     font-size: 0.8125rem;
-    color: var(--sl-color-text-accent, #6b7280);
+    color: var(--hs-color-text-accent);
   }
 
   .card > p {
     margin: 0 0 1rem 0;
-    color: var(--sl-color-text-accent, #6b7280);
+    color: var(--hs-color-text-accent);
     line-height: 1.65;
     flex: 1;
   }
@@ -456,14 +456,14 @@ const features = [
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9375rem;
-    color: var(--sl-color-text, #374151);
+    color: var(--hs-color-text);
   }
 
   .dot {
     width: 0.375rem;
     height: 0.375rem;
     border-radius: 50%;
-    background: var(--sl-color-accent, #2563eb);
+    background: var(--hs-color-accent);
     flex-shrink: 0;
   }
 
@@ -475,6 +475,6 @@ const features = [
   .card-more {
     font-size: 0.9375rem;
     font-weight: 600;
-    color: var(--sl-color-accent, #2563eb);
+    color: var(--hs-color-accent);
   }
 </style>

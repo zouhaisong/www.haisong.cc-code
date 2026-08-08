@@ -56,16 +56,76 @@ const currentYear = new Date().getFullYear();
           var stored = localStorage.getItem('theme');
           var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           var theme = stored || (prefersDark ? 'dark' : 'light');
-          if (theme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-          } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-          }
+          document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {}
       })();
     </script>
+
+    <style is:global>
+      :root {
+        --hs-color-bg: #ffffff;
+        --hs-color-text: #111827;
+        --hs-color-text-accent: #6b7280;
+        --hs-color-gray-5: #d1d5db;
+        --hs-color-gray-6: #e5e7eb;
+        --hs-color-gray-7: #f3f4f6;
+        --hs-color-accent: #2563eb;
+        --hs-color-accent-high: #1d4ed8;
+        --hs-color-accent-low: rgba(37, 99, 235, 0.25);
+
+        --sl-color-bg: var(--hs-color-bg);
+        --sl-color-text: var(--hs-color-text);
+        --sl-color-text-accent: var(--hs-color-text-accent);
+        --sl-color-gray-5: var(--hs-color-gray-5);
+        --sl-color-gray-6: var(--hs-color-gray-6);
+        --sl-color-gray-7: var(--hs-color-gray-7);
+        --sl-color-accent: var(--hs-color-accent);
+        --sl-color-accent-high: var(--hs-color-accent-high);
+        --sl-color-accent-low: var(--hs-color-accent-low);
+
+        color-scheme: light;
+      }
+
+      [data-theme='dark'] {
+        --hs-color-bg: #0f172a;
+        --hs-color-text: #e5e7eb;
+        --hs-color-text-accent: #94a3b8;
+        --hs-color-gray-5: #334155;
+        --hs-color-gray-6: #1e293b;
+        --hs-color-gray-7: #1e293b;
+        --hs-color-accent: #60a5fa;
+        --hs-color-accent-high: #3b82f6;
+        --hs-color-accent-low: rgba(96, 165, 250, 0.25);
+
+        --sl-color-bg: var(--hs-color-bg);
+        --sl-color-text: var(--hs-color-text);
+        --sl-color-text-accent: var(--hs-color-text-accent);
+        --sl-color-gray-5: var(--hs-color-gray-5);
+        --sl-color-gray-6: var(--hs-color-gray-6);
+        --sl-color-gray-7: var(--hs-color-gray-7);
+        --sl-color-accent: var(--hs-color-accent);
+        --sl-color-accent-high: var(--hs-color-accent-high);
+        --sl-color-accent-low: var(--hs-color-accent-low);
+
+        color-scheme: dark;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background-color: var(--hs-color-bg);
+        color: var(--hs-color-text);
+        transition: background-color 0.2s ease, color 0.2s ease;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.6;
+      }
+      a { color: inherit; }
+    </style>
   </head>
-  <body class="layout">
+  <body>
     <header class="site-header">
       <div class="site-header-inner">
         <a href="/" class="site-brand" aria-label={siteConfig.title}>
@@ -137,67 +197,39 @@ const currentYear = new Date().getFullYear();
       </div>
     </footer>
 
-    <script>
+    <script is:inline>
       (function () {
-        const btn = document.getElementById('theme-toggle');
-        if (!btn) return;
-        const html = document.documentElement;
-        btn.addEventListener('click', function () {
-          const current = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-          const next = current === 'dark' ? 'light' : 'dark';
-          html.setAttribute('data-theme', next);
-          try {
-            localStorage.setItem('theme', next);
-          } catch (e) {}
-        });
+        function bind() {
+          var btn = document.getElementById('theme-toggle');
+          if (!btn) return false;
+          if (btn.__themeBound) return true;
+          btn.__themeBound = true;
+          btn.addEventListener('click', function () {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) {}
+          });
+          return true;
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function once() {
+            bind();
+            document.removeEventListener('DOMContentLoaded', once);
+          });
+        } else {
+          bind();
+        }
       })();
     </script>
   </body>
 </html>
 
 <style>
-  :global(:root) {
-    --sl-color-bg: #ffffff;
-    --sl-color-text: #111827;
-    --sl-color-text-accent: #6b7280;
-    --sl-color-gray-5: #d1d5db;
-    --sl-color-gray-6: #e5e7eb;
-    --sl-color-gray-7: #f3f4f6;
-    --sl-color-accent: #2563eb;
-    --sl-color-accent-high: #1d4ed8;
-    --sl-color-accent-low: rgba(37, 99, 235, 0.25);
-  }
-
-  :global([data-theme='dark']) {
-    --sl-color-bg: #0f172a;
-    --sl-color-text: #e5e7eb;
-    --sl-color-text-accent: #94a3b8;
-    --sl-color-gray-5: #334155;
-    --sl-color-gray-6: #1e293b;
-    --sl-color-gray-7: #1e293b;
-    --sl-color-accent: #60a5fa;
-    --sl-color-accent-high: #3b82f6;
-    --sl-color-accent-low: rgba(96, 165, 250, 0.25);
-    color-scheme: dark;
-  }
-
-  :global([data-theme='dark'] body) {
-    background-color: var(--sl-color-bg);
-  }
-
-  .layout {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    background-color: var(--sl-color-bg);
-    color: var(--sl-color-text);
-    transition: background-color 0.2s ease, color 0.2s ease;
-  }
-
   .site-header {
-    border-bottom: 1px solid var(--sl-color-gray-6);
-    background: color-mix(in srgb, var(--sl-color-bg) 85%, transparent);
+    border-bottom: 1px solid var(--hs-color-gray-6);
+    background: color-mix(in srgb, var(--hs-color-bg) 85%, transparent);
     backdrop-filter: saturate(180%) blur(10px);
     -webkit-backdrop-filter: saturate(180%) blur(10px);
     position: sticky;
@@ -238,13 +270,13 @@ const currentYear = new Date().getFullYear();
 
   .site-nav a {
     text-decoration: none;
-    color: var(--sl-color-text);
+    color: var(--hs-color-text);
     font-weight: 500;
     transition: color 0.15s ease;
   }
 
   .site-nav a:hover {
-    color: var(--sl-color-accent);
+    color: var(--hs-color-accent);
   }
 
   .theme-toggle {
@@ -254,17 +286,17 @@ const currentYear = new Date().getFullYear();
     align-items: center;
     justify-content: center;
     border-radius: 0.5rem;
-    border: 1px solid var(--sl-color-gray-5);
-    background: var(--sl-color-bg);
-    color: var(--sl-color-text);
+    border: 1px solid var(--hs-color-gray-5);
+    background: var(--hs-color-bg);
+    color: var(--hs-color-text);
     cursor: pointer;
     padding: 0;
     transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease, transform 0.1s ease;
   }
 
   .theme-toggle:hover {
-    border-color: var(--sl-color-accent);
-    color: var(--sl-color-accent);
+    border-color: var(--hs-color-accent);
+    color: var(--hs-color-accent);
   }
 
   .theme-toggle:active {
@@ -277,47 +309,34 @@ const currentYear = new Date().getFullYear();
     stroke-width: 2;
   }
 
-  .theme-icon-moon {
-    display: none;
-  }
-
-  [data-theme='dark'] .theme-icon-sun {
-    display: none;
-  }
-
-  [data-theme='dark'] .theme-icon-moon {
-    display: block;
-  }
+  .theme-icon-moon { display: none; }
+  :global([data-theme='dark']) .theme-icon-sun { display: none; }
+  :global([data-theme='dark']) .theme-icon-moon { display: block; }
 
   @media (max-width: 640px) {
-    .site-nav {
-      display: none;
-    }
+    .site-nav { display: none; }
   }
 
   .site-main {
-    flex: 1;
+    min-height: 1px;
     max-width: 72rem;
     width: 100%;
     margin: 0 auto;
     padding: 3rem 1.5rem;
-    box-sizing: border-box;
   }
 
   .site-footer {
-    border-top: 1px solid var(--sl-color-gray-6);
-    background: var(--sl-color-bg);
+    border-top: 1px solid var(--hs-color-gray-6);
+    background: var(--hs-color-bg);
   }
 
   .site-footer-inner {
     max-width: 72rem;
     margin: 0 auto;
     padding: 1.5rem;
-    color: var(--sl-color-text-accent);
+    color: var(--hs-color-text-accent);
     font-size: 0.875rem;
   }
 
-  .site-footer-inner p {
-    margin: 0;
-  }
+  .site-footer-inner p { margin: 0; }
 </style>
