@@ -159,4 +159,42 @@ const { data } = entry;
     background: transparent;
     padding: 0;
   }
+  .entry-content :global(.table-wrapper) {
+    overflow-x: auto;
+    margin: 1.25rem 0;
+    border-radius: 0.5rem;
+    border: 1px solid var(--sl-color-gray-6, #e5e7eb);
+  }
+  .entry-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    min-width: 100%;
+  }
+  .entry-content :global(thead) {
+    background: var(--sl-color-gray-7, #f3f4f6);
+  }
+  .entry-content :global(th) {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: var(--sl-color-text, #111827);
+    border-bottom: 2px solid var(--sl-color-gray-6, #e5e7eb);
+    white-space: nowrap;
+  }
+  .entry-content :global(td) {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--sl-color-gray-6, #e5e7eb);
+    color: var(--sl-color-text, #374151);
+    vertical-align: top;
+  }
+  .entry-content :global(tbody tr:last-child td) {
+    border-bottom: none;
+  }
+  .entry-content :global(tbody tr:nth-child(even)) {
+    background: color-mix(in srgb, var(--sl-color-gray-7, #f3f4f6) 50%, transparent);
+  }
+  .entry-content :global(tbody tr:hover) {
+    background: color-mix(in srgb, var(--sl-color-accent, #2563eb) 4%, transparent);
+  }
 </style>
