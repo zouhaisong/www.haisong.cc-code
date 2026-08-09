@@ -33,5 +33,6 @@
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "python.terminal.activateEnvironment": false
 }
