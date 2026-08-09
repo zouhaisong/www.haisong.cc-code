@@ -3,12 +3,16 @@ import MainLayout from '~/layouts/MainLayout.astro';
 import siteConfig from '~/config/site';
 import { getCollection } from 'astro:content';
 
-const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+const docsEntries = await getCollection('docs', ({ data }) => !data.draft);
+
+const recentPosts = docsEntries
+  .filter((e) => e.id.startsWith('blog/') && typeof e.data?.date !== 'undefined')
+  .sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
   .slice(0, 3);
 
-const wikiEntries = (await getCollection('wiki', ({ data }) => !data.draft))
-  .sort((a, b) => a.data.order - b.data.order)
+const wikiEntries = docsEntries
+  .filter((e) => e.id.startsWith('wiki/'))
+  .sort((a, b) => (a.data.sidebar?.order ?? 0) - (b.data.sidebar?.order ?? 0) || a.data.title.localeCompare(b.data.title, 'zh-CN'))
   .slice(0, 4);
 
 const features = [
@@ -50,7 +54,7 @@ const features = [
       </h1>
       <p class="hero-subtitle">{siteConfig.description}</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="/wiki/">
+        <a class="btn btn-primary" href="/wiki/home/">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           进入知识库
         </a>

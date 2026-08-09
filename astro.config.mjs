@@ -36,6 +36,12 @@ export default defineConfig({
           lang: siteConfig.locale.lang,
         },
       },
+      logo: {
+        light: './public/images/logo.svg',
+        dark: './public/images/logo-dark.svg',
+        alt: siteConfig.logo.text ?? siteConfig.title,
+        replacesTitle: true,
+      },
       favicon: siteConfig.favicon,
       social: [],
       tableOfContents: {
@@ -48,18 +54,15 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: '文章',
-          link: '/blog/',
-        },
-        {
           label: '知识库',
           items: [
-            { link: '/wiki/', label: '知识库首页' },
             { autogenerate: { directory: 'wiki' } },
           ],
         },
       ],
-      components: {},
+      components: {
+        SiteTitle: './src/components/SiteTitle.astro',
+      },
       head: [
         {
           tag: 'meta',
@@ -72,8 +75,14 @@ export default defineConfig({
       plugins: [
         starlightBlog({
           title: '文章',
-          authors: {},
-          postsPerPage: 10,
+          prefix: 'blog',
+          authors: {
+            '海松': {
+              name: '海松',
+            },
+          },
+          navigation: 'none',
+          postCount: 10,
           recentPostCount: 5,
         }),
       ],
