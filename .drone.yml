@@ -15,7 +15,7 @@ trigger:
 
 steps:
   - name: build-and-deploy
-    image: docker:27
+    image: docker:27-cli
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
