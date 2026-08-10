@@ -64,6 +64,11 @@ export interface SiteContact {
   channels: SiteContactChannel[];
 }
 
+export interface SiteFooter {
+  icp?: string;
+  icpLink?: string;
+}
+
 export interface SiteConfig {
   title: string;
   titleEn?: string;
@@ -76,6 +81,7 @@ export interface SiteConfig {
   navigation: SiteNavigation;
   works: SiteWorks;
   contact: SiteContact;
+  footer?: SiteFooter;
 }
 
 export const siteConfig: SiteConfig = siteConfigData as SiteConfig;

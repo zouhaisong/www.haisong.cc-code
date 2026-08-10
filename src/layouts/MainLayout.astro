@@ -196,6 +196,13 @@ const currentYear = new Date().getFullYear();
     <footer class="site-footer">
       <div class="site-footer-inner">
         <p>© {currentYear} {siteConfig.title}. All rights reserved.</p>
+        {siteConfig.footer?.icp && (
+          <p class="footer-icp">
+            <a href={siteConfig.footer.icpLink ?? 'https://beian.miit.gov.cn/'} target="_blank" rel="noopener noreferrer">
+              {siteConfig.footer.icp}
+            </a>
+          </p>
+        )}
       </div>
     </footer>
 
@@ -341,4 +348,20 @@ const currentYear = new Date().getFullYear();
   }
 
   .site-footer-inner p { margin: 0; }
+
+  .site-footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .footer-icp a {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .footer-icp a:hover {
+    opacity: 0.75;
+  }
 </style>

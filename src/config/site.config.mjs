@@ -90,6 +90,10 @@ export const siteConfig = {
       },
     ],
   },
+  footer: {
+    icp: '沪ICP备2026037718号-1',
+    icpLink: 'https://beian.miit.gov.cn/',
+  },
 };
 
 export default siteConfig;
