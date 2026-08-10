@@ -1,20 +1,29 @@
 ---
 import Default from '@astrojs/starlight/components/Footer.astro';
 import siteConfig from '~/config/site';
+
+const currentYear = new Date().getFullYear();
 ---
 
 <Default>
   <slot />
 </Default>
 
-{siteConfig.footer?.icp && (
-  <p class="sl-flex sl-justify-center sl-gap-3 sl-text-muted sl-text-xs sl-mt-2">
-    <a
-      href={siteConfig.footer.icpLink ?? 'https://beian.miit.gov.cn/'}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {siteConfig.footer.icp}
-    </a>
-  </p>
-)}
+<p
+  class="hs-footer-line sl-flex sl-justify-center sl-gap-2 sl-text-muted sl-text-xs sl-mt-2 sl-flex-wrap sl-pb-2"
+  style="margin-top: 0.5rem;"
+>
+  <span>© {currentYear} {siteConfig.title}. All rights reserved.</span>
+  {siteConfig.footer?.icp && (
+    <>
+      <span class="hs-footer-sep" aria-hidden="true" style="opacity: 0.5;">·</span>
+      <a
+        href={siteConfig.footer.icpLink ?? 'https://beian.miit.gov.cn/'}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {siteConfig.footer.icp}
+      </a>
+    </>
+  )}
+</p>

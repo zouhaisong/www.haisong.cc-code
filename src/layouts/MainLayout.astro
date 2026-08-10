@@ -195,14 +195,22 @@ const currentYear = new Date().getFullYear();
 
     <footer class="site-footer">
       <div class="site-footer-inner">
-        <p>© {currentYear} {siteConfig.title}. All rights reserved.</p>
-        {siteConfig.footer?.icp && (
-          <p class="footer-icp">
-            <a href={siteConfig.footer.icpLink ?? 'https://beian.miit.gov.cn/'} target="_blank" rel="noopener noreferrer">
-              {siteConfig.footer.icp}
-            </a>
-          </p>
-        )}
+        <p class="footer-line">
+          <span>© {currentYear} {siteConfig.title}. All rights reserved.</span>
+          {siteConfig.footer?.icp && (
+            <>
+              <span class="footer-sep" aria-hidden="true">·</span>
+              <a
+                class="footer-icp-link"
+                href={siteConfig.footer.icpLink ?? 'https://beian.miit.gov.cn/'}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {siteConfig.footer.icp}
+              </a>
+            </>
+          )}
+        </p>
       </div>
     </footer>
 
@@ -351,17 +359,28 @@ const currentYear = new Date().getFullYear();
 
   .site-footer-inner {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    justify-content: center;
   }
 
-  .footer-icp a {
+  .footer-line {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .footer-sep {
+    opacity: 0.5;
+  }
+
+  .footer-icp-link {
     color: inherit;
     text-decoration: none;
     transition: opacity 0.15s ease;
   }
 
-  .footer-icp a:hover {
-    opacity: 0.75;
-  }
+  .footer-icp-link:hover {
+      opacity: 0.75;
+    }
 </style>
