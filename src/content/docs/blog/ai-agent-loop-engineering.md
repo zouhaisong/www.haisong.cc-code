@@ -1,3 +1,15 @@
+---
+title: "AI Agent Loop Engineering：可观测可纠错的执行轨迹闭环"
+date: 2026-08-09
+excerpt: "AI Agent Loop Engineering 将关注点从提示词优化转向构建可重复、可观测且可纠错的执行轨迹。通过整合目标、状态、动作、反馈、验证与记忆等要素，形成遵循先验证再声称完成原则的控制系统。其本质并非单纯增加对话轮次，而是将各组件组织成可反复自纠的工程闭环，以实现高质量的智能体落地。"
+tags:
+  - AI Agent
+  - Loop Engineering
+  - 工程方法论
+  - 执行轨迹
+  - 验证优先
+---
+
 # ai-agent-loop-engineering
 
 ## 定义

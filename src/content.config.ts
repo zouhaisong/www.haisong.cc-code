@@ -10,6 +10,72 @@ import { blogSchema } from 'starlight-blog/schema';
 
 const TITLE_PLACEHOLDER = '__TITLE_PLACEHOLDER__';
 const DATE_PLACEHOLDER = new Date(0);
+const EXCERPT_MAX_LENGTH = 200;
+const MARKDOWN_EXCERPT_DELIMITER = '<!-- excerpt -->';
+const MDX_EXCERPT_DELIMITER = '{/* excerpt */}';
+
+function stripFrontmatter(content: string): string {
+  const fmMatch = content.match(/^---\s*\n[\s\S]*?\n---\s*\n?/);
+  return fmMatch ? content.slice(fmMatch[0].length) : content;
+}
+
+function stripMarkdownFormatting(md: string): string {
+  return md
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]*`/g, '')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^\s*#{1,6}\s.*/gm, '')
+    .replace(/^>\s*\[!([^\]]+)\][^\n]*/gim, '')
+    .replace(/^>\s?/gm, '')
+    .replace(/\[!([^\]]+)\][^\n]*/gi, '')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/^\s*\|.*\|\s*$/gm, '')
+    .replace(/[*_~]{1,3}([^*_~]+)[*_~]{1,3}/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+function extractExcerptFromFile(rawContent: string): string | undefined {
+  const body = stripFrontmatter(rawContent);
+
+  const delimiterIdx = body.indexOf(MARKDOWN_EXCERPT_DELIMITER);
+  const mdxDelimiterIdx = body.indexOf(MDX_EXCERPT_DELIMITER);
+  const hasDelim = delimiterIdx !== -1 || mdxDelimiterIdx !== -1;
+
+  if (hasDelim) {
+    const idx = delimiterIdx !== -1 ? delimiterIdx : mdxDelimiterIdx;
+    const aboveDelim = body.slice(0, idx).trim();
+    if (aboveDelim) {
+      return aboveDelim;
+    }
+  }
+
+  const plain = stripMarkdownFormatting(body)
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!plain) return undefined;
+
+  if (plain.length <= EXCERPT_MAX_LENGTH) {
+    return plain;
+  }
+
+  let cut = EXCERPT_MAX_LENGTH;
+  const lastPunct = plain.slice(0, cut + 1).search(/[。！？!?；;。\.]\s*[^\s。！？!?；;。\.]*$/);
+  if (lastPunct !== -1 && lastPunct > EXCERPT_MAX_LENGTH * 0.5) {
+    cut = lastPunct + 1;
+  } else {
+    const lastSpace = plain.slice(0, cut + 1).lastIndexOf(' ');
+    if (lastSpace > EXCERPT_MAX_LENGTH * 0.6) {
+      cut = lastSpace;
+    }
+  }
+
+  return plain.slice(0, cut).trim() + '…';
+}
 
 function slugToTitle(slug: string): string {
   const parts = slug
@@ -60,6 +126,24 @@ function docsLoader(): Loader {
               data.date = new Date();
               changed = true;
             }
+          }
+        }
+
+        if (
+          (data.excerpt === undefined || data.excerpt === null || String(data.excerpt).trim() === '') &&
+          entry.filePath
+        ) {
+          const absPath = path.isAbsolute(entry.filePath)
+            ? entry.filePath
+            : path.resolve(rootDir, entry.filePath);
+          try {
+            const raw = fs.readFileSync(absPath, 'utf-8');
+            const excerpt = extractExcerptFromFile(raw);
+            if (excerpt) {
+              data.excerpt = excerpt;
+              changed = true;
+            }
+          } catch {
           }
         }
 
