@@ -6,6 +6,13 @@ platform:
   os: linux
   arch: amd64
 
+trigger:
+  event:
+    - push
+    - custom
+  branch:
+    - main
+
 steps:
   - name: build-and-deploy
     image: docker:27
@@ -16,9 +23,6 @@ steps:
       - docker compose -f deploy/docker-compose.yml build blogwiki
       - docker compose -f deploy/docker-compose.yml up -d blogwiki
       - docker image prune -f
-    when:
-      branch: main
-      event: push
 
 volumes:
   - name: docker_sock

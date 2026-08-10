@@ -11,3 +11,4 @@ Dockerfile
 deploy/acme
 deploy/traefik.yml
 *.md
+.env
