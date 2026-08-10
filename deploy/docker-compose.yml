@@ -10,9 +10,9 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_net"
       - "traefik.http.routers.blogwiki.entrypoints=websecure"
-      - "traefik.http.routers.blogwiki.rule=Host(`www.haisong.cc`)"
+      - "traefik.http.routers.blogwiki.rule=Host(`www.haisong.cc`) || Host(`haisong.cc`)"
       - "traefik.http.routers.blogwiki.tls=true"
-      - "traefik.http.routers.blogwiki.tls.certresolver=myresolver"
+      - "traefik.http.routers.blogwiki.tls.certresolver=dnsresolver"
     networks:
       - traefik_net
 
