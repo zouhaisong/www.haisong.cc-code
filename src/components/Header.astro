@@ -1,0 +1,117 @@
+---
+import siteConfig from '~/config/site';
+import Logo from '~/components/Logo.astro';
+
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro';
+import Search from '@astrojs/starlight/components/Search.astro';
+import SocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
+import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro';
+
+const shouldRenderSearch = true;
+---
+
+<div class="header">
+  <div class="header-inner">
+    <a href="/" class="site-brand" aria-label={siteConfig.title}>
+      <Logo />
+    </a>
+    <div class="header-right">
+      <nav class="site-nav" aria-label="主导航">
+        <ul>
+          {siteConfig.navigation.header.map((item) => (
+            <li>
+              <a href={item.link}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="header-actions">
+        {shouldRenderSearch && <Search />}
+        <div class="social-icons">
+          <SocialIcons />
+        </div>
+        <ThemeSelect />
+        <LanguageSelect />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .header {
+    border-bottom: 1px solid var(--sl-color-gray-6);
+    background: color-mix(in srgb, var(--sl-color-bg) 85%, transparent);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: auto !important;
+  }
+
+  .header-inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .site-brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .site-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav a {
+    text-decoration: none;
+    color: var(--sl-color-text);
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  .site-nav a:hover {
+    color: var(--sl-color-accent);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .social-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .site-nav { display: none; }
+  }
+
+  @media (min-width: 50rem) {
+    .header {
+      display: block !important;
+      grid-template-columns: none !important;
+    }
+  }
+</style>
