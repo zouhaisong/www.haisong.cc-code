@@ -40,7 +40,7 @@ export default defineConfig({
         light: './public/images/logo.svg',
         dark: './public/images/logo-dark.svg',
         alt: siteConfig.logo.text ?? siteConfig.title,
-        replacesTitle: true,
+        replacesTitle: false,
       },
       favicon: siteConfig.favicon,
       social: [],
@@ -62,6 +62,7 @@ export default defineConfig({
       ],
       customCss: ['./src/styles/custom.css'],
       components: {
+        Logo: './src/components/Logo.astro',
         SiteTitle: './src/components/SiteTitle.astro',
       },
       head: [

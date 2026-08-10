@@ -171,3 +171,193 @@
 .sl-markdown-content h3 + * {
   margin-top: 0;
 }
+
+.sl-markdown-content .callout {
+  --callout-color: #3b82f6;
+  margin: 1.25rem 0;
+  border-radius: 0.5rem;
+  border-left: 4px solid var(--callout-color);
+  background: color-mix(in srgb, var(--callout-color) 8%, transparent);
+  overflow: hidden;
+}
+
+.sl-markdown-content .callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--callout-color);
+  background: color-mix(in srgb, var(--callout-color) 15%, transparent);
+}
+
+.sl-markdown-content .callout-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.sl-markdown-content .callout-title-text {
+  flex: 1;
+}
+
+.sl-markdown-content .callout-body {
+  padding: 0.75rem 1rem;
+}
+
+.sl-markdown-content .callout-body > *:first-child {
+  margin-top: 0;
+}
+
+.sl-markdown-content .callout-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.sl-markdown-content .callout-collapsible > .callout-summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.sl-markdown-content .callout-collapsible > .callout-summary::-webkit-details-marker {
+  display: none;
+}
+
+.sl-markdown-content .callout-collapsible > .callout-summary .callout-title {
+  position: relative;
+}
+
+.sl-markdown-content .callout-collapsible > .callout-summary .callout-title::after {
+  content: '▾';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.15s ease;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.sl-markdown-content .callout-collapsible:not([open]) > .callout-summary .callout-title::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.sl-markdown-content .callout-collapsible[open] > .callout-body {
+  border-top: 1px solid color-mix(in srgb, var(--callout-color) 20%, transparent);
+}
+
+:root:not([data-theme='dark']) .sl-markdown-content .callout {
+  --callout-color-note: #3b82f6;
+  --callout-color-info: #3b82f6;
+  --callout-color-tip: #10b981;
+  --callout-color-hint: #10b981;
+  --callout-color-success: #10b981;
+  --callout-color-check: #10b981;
+  --callout-color-done: #10b981;
+  --callout-color-important: #8b5cf6;
+  --callout-color-question: #f59e0b;
+  --callout-color-help: #f59e0b;
+  --callout-color-faq: #f59e0b;
+  --callout-color-warning: #f59e0b;
+  --callout-color-caution: #f59e0b;
+  --callout-color-attention: #f59e0b;
+  --callout-color-failure: #ef4444;
+  --callout-color-fail: #ef4444;
+  --callout-color-missing: #ef4444;
+  --callout-color-danger: #ef4444;
+  --callout-color-error: #ef4444;
+  --callout-color-bug: #ef4444;
+  --callout-color-example: #8b5cf6;
+  --callout-color-quote: #6b7280;
+  --callout-color-cite: #6b7280;
+  --callout-color-abstract: #06b6d4;
+  --callout-color-summary: #06b6d4;
+  --callout-color-tldr: #06b6d4;
+  --callout-color-todo: #0ea5e9;
+}
+
+:root[data-theme='dark'] .sl-markdown-content .callout {
+  --callout-color-note: #60a5fa;
+  --callout-color-info: #60a5fa;
+  --callout-color-tip: #34d399;
+  --callout-color-hint: #34d399;
+  --callout-color-success: #34d399;
+  --callout-color-check: #34d399;
+  --callout-color-done: #34d399;
+  --callout-color-important: #a78bfa;
+  --callout-color-question: #fbbf24;
+  --callout-color-help: #fbbf24;
+  --callout-color-faq: #fbbf24;
+  --callout-color-warning: #fbbf24;
+  --callout-color-caution: #fbbf24;
+  --callout-color-attention: #fbbf24;
+  --callout-color-failure: #f87171;
+  --callout-color-fail: #f87171;
+  --callout-color-missing: #f87171;
+  --callout-color-danger: #f87171;
+  --callout-color-error: #f87171;
+  --callout-color-bug: #f87171;
+  --callout-color-example: #a78bfa;
+  --callout-color-quote: #9ca3af;
+  --callout-color-cite: #9ca3af;
+  --callout-color-abstract: #22d3ee;
+  --callout-color-summary: #22d3ee;
+  --callout-color-tldr: #22d3ee;
+  --callout-color-todo: #38bdf8;
+}
+
+.sl-markdown-content .callout-note,
+.sl-markdown-content .callout-info {
+  --callout-color: var(--callout-color-note, #3b82f6);
+}
+
+.sl-markdown-content .callout-tip,
+.sl-markdown-content .callout-hint,
+.sl-markdown-content .callout-success,
+.sl-markdown-content .callout-check,
+.sl-markdown-content .callout-done {
+  --callout-color: var(--callout-color-tip, #10b981);
+}
+
+.sl-markdown-content .callout-important,
+.sl-markdown-content .callout-example {
+  --callout-color: var(--callout-color-important, #8b5cf6);
+}
+
+.sl-markdown-content .callout-question,
+.sl-markdown-content .callout-help,
+.sl-markdown-content .callout-faq {
+  --callout-color: var(--callout-color-question, #f59e0b);
+}
+
+.sl-markdown-content .callout-warning,
+.sl-markdown-content .callout-caution,
+.sl-markdown-content .callout-attention {
+  --callout-color: var(--callout-color-warning, #f59e0b);
+}
+
+.sl-markdown-content .callout-failure,
+.sl-markdown-content .callout-fail,
+.sl-markdown-content .callout-missing,
+.sl-markdown-content .callout-danger,
+.sl-markdown-content .callout-error,
+.sl-markdown-content .callout-bug {
+  --callout-color: var(--callout-color-danger, #ef4444);
+}
+
+.sl-markdown-content .callout-quote,
+.sl-markdown-content .callout-cite {
+  --callout-color: var(--callout-color-quote, #6b7280);
+}
+
+.sl-markdown-content .callout-abstract,
+.sl-markdown-content .callout-summary,
+.sl-markdown-content .callout-tldr {
+  --callout-color: var(--callout-color-abstract, #06b6d4);
+}
+
+.sl-markdown-content .callout-todo {
+  --callout-color: var(--callout-color-todo, #0ea5e9);
+}

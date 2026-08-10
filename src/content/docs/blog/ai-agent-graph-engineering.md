@@ -1,13 +1,13 @@
 ---
-title: "AI Agent Graph Engineering：复杂控制流的状态图工程化"
+title: "ai-agent-graph-engineering"
 date: 2026-08-09
-excerpt: "AI Agent Graph Engineering 将复杂系统显式建模为状态图，通过节点、边、共享状态及运行时机制解决多阶段与多角色协作的控制流问题。其核心价值在于构建显式状态机，支持分支、回环、暂停与恢复，使系统具备可运行、可追踪与可治理能力，从而实现高质量的工程化落地。"
+excerpt: "AI Agent Graph Engineering 旨在解决复杂多智能体系统的控制流显式化问题，通过将系统建模为包含节点、边和共享上下文的状态图，实现分支、回环与持久化。核心在于利用显式状态机替代简单链式结构，构建包含状态模式、节点边设计及运行时的工程骨架。该模式适用于多阶段、需人工干预或高合规要求的场景，能构建可运行、可追踪、可治理的整体流程。"
 tags:
-  - AI Agent
-  - Graph Engineering
-  - 状态机
-  - 工程方法论
-  - LangGraph
+  - 定义
+  - 核心结论
+  - 2. Nodes
+  - 3. Edges
+  - 2. 有局部重试
 ---
 
 # ai-agent-graph-engineering

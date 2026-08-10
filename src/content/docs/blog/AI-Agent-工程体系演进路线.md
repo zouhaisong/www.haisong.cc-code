@@ -1,13 +1,13 @@
 ---
 title: "AI-Agent 工程体系演进路线"
-date: 2026-08-08
-excerpt: "AI-Agent工程体系演进路线涵盖Prompt、Context、Harness、Loop及Graph五个核心概念，分别对应指令设计、知识注入、工作系统、自动反馈闭环与执行流编排结构。解析各阶段解决的核心问题与局限性，提出落地路径，指出真正的竞争点在于构建由Context、Harness、Graph、Loop共同驱动的可持续软件工程系统。"
+date: 2026-08-09
+excerpt: "AI-Agent工程体系演进路线包含Prompt、Context、Harness、Loop及Graph Engineering五个阶段，分别解决指令设计、知识注入、工作系统构建、自动反馈闭环及执行流编排问题。通过分析各阶段核心局限与本质，指出真正的竞争点在于构建由Context、Harness、Graph、Loop共同驱动的可持续软件工程系统。"
 tags:
-  - AI Agent
-  - 工程体系
-  - Prompt Engineering
-  - Context Engineering
-  - Graph Engineering
+  - 核心问题
+  - 局限性
+  - 一个典型示例
+  - 本质变化
+  - 从能力层级看
 ---
 
 # AI-Agent 工程体系演进路线
