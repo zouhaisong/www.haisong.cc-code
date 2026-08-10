@@ -1,35 +1,22 @@
 services:
-  traefik:
-    image: traefik:v3.2
+  blogwiki:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: blogwiki:latest
+    container_name: blogwiki
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./acme:/acme
-    networks:
-      - web
-
-  wiki:
-    image: nginx:1.27-alpine
-    restart: unless-stopped
-    depends_on:
-      - traefik
-    volumes:
-      - ../dist:/usr/share/nginx/html:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=web"
-      - "traefik.http.routers.wiki.entrypoints=websecure"
-      - "traefik.http.routers.wiki.rule=Host(`www.haisong.cc`) || Host(`wiki.yourdomain.com`)"
-      - "traefik.http.routers.wiki.tls.certresolver=acme"
+      - "traefik.docker.network=traefik_net"
+      - "traefik.http.routers.blogwiki.entrypoints=websecure"
+      - "traefik.http.routers.blogwiki.rule=Host(`www.haisong.cc`)"
+      - "traefik.http.routers.blogwiki.tls=true"
+      - "traefik.http.routers.blogwiki.tls.certresolver=myresolver"
     networks:
-      - web
+      - traefik_net
 
 networks:
-  web:
-    name: web
-    driver: bridge
+  traefik_net:
+    external: true
+    name: traefik_net

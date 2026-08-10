@@ -1,0 +1,26 @@
+kind: pipeline
+type: docker
+name: build-and-deploy
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: build-and-deploy
+    image: docker:27
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - docker compose -f deploy/docker-compose.yml build blogwiki
+      - docker compose -f deploy/docker-compose.yml up -d blogwiki
+      - docker image prune -f
+    when:
+      branch: main
+      event: push
+
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock
