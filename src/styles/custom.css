@@ -88,6 +88,27 @@
   color: var(--sl-color-text);
 }
 
+.content-panel > .sl-container > h1 > a,
+.sl-markdown-content h1 > a,
+.sl-markdown-content h2 > a,
+.sl-markdown-content h3 > a,
+.sl-markdown-content h4 > a,
+.sl-markdown-content h5 > a,
+.sl-markdown-content h6 > a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.content-panel > .sl-container > h1 > a:where(:hover),
+.sl-markdown-content h1 > a:where(:hover),
+.sl-markdown-content h2 > a:where(:hover),
+.sl-markdown-content h3 > a:where(:hover),
+.sl-markdown-content h4 > a:where(:hover),
+.sl-markdown-content h5 > a:where(:hover),
+.sl-markdown-content h6 > a:where(:hover) {
+  text-decoration: none !important;
+}
+
 .sl-markdown-content h3 {
   font-size: clamp(1.25rem, 2.6vw, 1.5rem);
   margin-top: 2rem;
